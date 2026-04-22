@@ -2,8 +2,23 @@
   {
     "script": "Prueba_Rap\u00edda.py",
     "status": "PASS",
-    "duration": 1.3,
+    "duration": 2.7,
     "error": "",
-    "steps": []
+    "steps": [
+      {
+        "num": 1,
+        "action": "goto: https://playwright.dev",
+        "success": true,
+        "error": "",
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_Rap\u00edda/step_001.png"
+      },
+      {
+        "num": 2,
+        "action": "click [link: Get started]",
+        "success": true,
+        "error": "",
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_Rap\u00edda/step_002.png"
+      }
+    ]
   }
 ]

@@ -10,8 +10,13 @@ import re
 import json
 from dataclasses import dataclass, field
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from config import DATA_DIR
+# Intentar importar DATA_DIR, si falla usar directorio temporal
+try:
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+    from config import DATA_DIR
+except ImportError:
+    # En CI, usar directorio temporal
+    DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
 
 @dataclass
