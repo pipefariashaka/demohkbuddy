@@ -10,6 +10,9 @@ on:
 jobs:
   playwright-tests:
     runs-on: ubuntu-latest
+    env:
+      CI: true
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -17,9 +20,9 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
-      - name: Install dependencies
+      - name: Install Playwright
         run: |
           pip install playwright
           playwright install chromium --with-deps
@@ -32,4 +35,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: results.json
+          path: |
+            results.json
+            report.html
+          if-no-files-found: warn
