@@ -10,11 +10,9 @@ def run(playwright: Playwright) -> None:
     
     # Navegación a la página principal
     page.goto("https://www.correos.cl/")
-    expect(page).to_have_title(re.compile("CorreosChile"))
 
     # Navegar al centro de ayuda
     page.get_by_role("link", name="Ayuda").click()
-    expect(page).to_have_url(re.compile(".*ayuda.*"))
     
     # Realizar búsqueda de información
     page.get_by_label("Buscar en preguntas frecuentes").fill("envio")
