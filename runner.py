@@ -96,12 +96,40 @@ for name in SCRIPTS:
                     is_last = (i == len(parsed_steps) - 1)
                     # Si el script falló, marcar el último step como fallido
                     step_success = r.returncode == 0 or not is_last
+                    
+                    # Construir descripción legible del paso
+                    action_desc = ps.action
+                    if ps.value:
+                        action_desc += f": {ps.value}"
+                    if ps.selector:
+                        action_desc += f" [{ps.selector}]"
+                    
                     steps.append({
                         "num":             ps.num,
-                        "action":          ps.action,
+                        "action":          action_desc,
                         "success":         step_success,
                         "error":           "" if step_success else "Error en este paso",
                         "screenshot_path": screenshots_map.get(str(ps.num), ""),
+                    })
+            else:
+                # Si no hay steps.json, extraer pasos del código sin screenshots
+                parsed_steps = sr._extract_steps_from_script(source)
+                for i, ps in enumerate(parsed_steps):
+                    is_last = (i == len(parsed_steps) - 1)
+                    step_success = r.returncode == 0 or not is_last
+                    
+                    action_desc = ps.action
+                    if ps.value:
+                        action_desc += f": {ps.value}"
+                    if ps.selector:
+                        action_desc += f" [{ps.selector}]"
+                    
+                    steps.append({
+                        "num":             ps.num,
+                        "action":          action_desc,
+                        "success":         step_success,
+                        "error":           "" if step_success else "Error en este paso",
+                        "screenshot_path": "",
                     })
         except Exception as e:
             print(f"[step_runner] Error: {e} — ejecutando sin instrumentación")
@@ -324,6 +352,6 @@ html = (
 )
 
 Path("report.html").write_text(html, encoding="utf-8")
-print("\n\U0001f4c4 Reporte HTML generado: report.html")
+print("\n[OK] Reporte HTML generado: report.html")
 
 sys.exit(0 if failed == 0 else 1)
