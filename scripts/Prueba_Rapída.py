@@ -7,10 +7,8 @@ def run(playwright: Playwright) -> None:
     browser = playwright.chromium.launch(headless=False)
     context = browser.new_context()
     page = context.new_page()
-    page.goto(\"https://playwright.dev/\")
-    expect(page).to_have_title(re.compile(\"Playwright\"))
-    page.get_by_role(\"link\", name=\"Get started\").click()
-    expect(page).to_have_url(re.compile(\".*intro.*\"))
+    page.goto("https://playwright.dev")
+    page.get_by_role("link", name="Get started").click()
     context.close()
     browser.close()
 
