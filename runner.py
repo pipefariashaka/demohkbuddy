@@ -85,26 +85,25 @@ rows = ""
 for i, r in enumerate(results):
     sc  = "#28A745" if r["status"]=="PASS" else ("#DC3545" if r["status"]=="FAIL" else "#888888")
     si  = "\u2713" if r["status"]=="PASS" else ("\u2717" if r["status"]=="FAIL" else "\u2014")
-    err = f'<div class="step-err">{_esc(r["error"])}</div>' if r["error"] else ""
-    has = bool(r["error"])
+    err_html = '<div class="step-err">' + _esc(r["error"]) + '</div>' if r["error"] else ""
+    has    = bool(r["error"])
     arrow  = '<span class="acc-arrow">&#9658;</span>' if has else ""
     cursor = "cursor:pointer;" if has else ""
-    body   = f'<div class="acc-body">{err}</div>' if has else ""
-    rows += f"""
-    <div class="acc">
-      <div class="acc-head" style="{cursor}border-color:{sc}" onclick="toggleAcc(this)">
-        <span class="step-num">#{i+1}</span>
-        <span class="step-desc">{_esc(r["script"])}</span>
-        <span class="step-status" style="color:{sc}">{si} {r["status"]}</span>
-        <span class="step-dur">{_dur(r["duration"])}</span>
-        {arrow}
-      </div>
-      {body}
-    </div>"""
+    body   = '<div class="acc-body">' + err_html + '</div>' if has else ""
+    rows  += (
+        '\n    <div class="acc">'
+        '\n      <div class="acc-head" style="' + cursor + 'border-color:' + sc + '" onclick="toggleAcc(this)">'
+        '\n        <span class="step-num">#' + str(i+1) + '</span>'
+        '\n        <span class="step-desc">' + _esc(r["script"]) + '</span>'
+        '\n        <span class="step-status" style="color:' + sc + '">' + si + ' ' + r["status"] + '</span>'
+        '\n        <span class="step-dur">' + _dur(r["duration"]) + '</span>'
+        '\n        ' + arrow +
+        '\n      </div>'
+        '\n      ' + body +
+        '\n    </div>'
+    )
 
-html = f"""<!DOCTYPE html>
-<html lang="es"><head><meta charset="utf-8"><title>HakaBuddy CI Report</title>
-<style>
+CSS = """
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',sans-serif;background:#12132A;color:#E8E8F0;padding:32px;font-size:16px}
 .main-header{background:#1E1F33;border-radius:12px;padding:24px 32px;margin-bottom:24px;border-left:5px solid #00D4FF}
@@ -130,27 +129,9 @@ body{font-family:'Segoe UI',sans-serif;background:#12132A;color:#E8E8F0;padding:
 .acc-body{display:none;padding:10px 18px 14px}
 .step-err{color:#FF6B6B;font-size:13px;font-family:Consolas,monospace;background:#3D1A1A;padding:8px 12px;border-radius:6px;white-space:pre-wrap}
 .footer{text-align:center;color:#555577;font-size:12px;margin-top:24px}
-</style></head><body>
-<div class="main-header">
-  <div class="suite-title">&#127917; HakaBuddy CI &mdash; Reporte de Suite</div>
-  <div class="status-row">
-    <span class="status-badge" style="background:{ok_bg};color:{ok_color};border-color:{ok_color}">{icon} {status_txt}</span>
-    <span style="color:#9999BB">&#9201; {_dur(total_dur)}</span>
-    <span style="color:#9999BB">&#128203; {len(results)} scripts</span>
-    <span style="color:#9999BB">&#128197; {fecha}</span>
-  </div>
-  <div class="stats-row">
-    <div class="stat-box green">&#10003; {passed} exitosos</div>
-    <div class="stat-box red">&#10007; {failed} fallidos</div>
-    <div class="stat-box blue">&#9201; {_dur(total_dur)}</div>
-  </div>
-  <div class="progress-wrap"><div class="progress-bar" style="width:{pct}%;background:{ok_color}"></div></div>
-  <div style="color:#8888AA;font-size:13px">{pct}% exitoso</div>
-</div>
-<div class="scripts-title">&#128203; Scripts ejecutados</div>
-{rows}
-<div class="footer">Generado por HakaBuddy CI Runner &bull; {fecha}</div>
-<script>
+"""
+
+JS = """
 function toggleAcc(h){var b=h.nextElementSibling,a=h.querySelector('.acc-arrow');if(!b)return;
 b.style.display=b.style.display==='block'?'none':'block';
 if(a)a.style.transform=b.style.display==='block'?'rotate(90deg)':'rotate(0deg)';}
@@ -159,10 +140,36 @@ document.querySelectorAll('.acc').forEach(function(a){
 var s=a.querySelector('.step-status');
 if(s&&s.textContent.includes('FAIL')){var h=a.querySelector('.acc-head');if(h)toggleAcc(h);}
 });});
-</script>
-</body></html>"""
+"""
+
+html = (
+    '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">'
+    '<title>HakaBuddy CI Report</title>'
+    '<style>' + CSS + '</style></head><body>'
+    '<div class="main-header">'
+    '<div class="suite-title">&#127917; HakaBuddy CI &mdash; Reporte de Suite</div>'
+    '<div class="status-row">'
+    '<span class="status-badge" style="background:' + ok_bg + ';color:' + ok_color + ';border-color:' + ok_color + '">' + icon + ' ' + status_txt + '</span>'
+    '<span style="color:#9999BB">&#9201; ' + _dur(total_dur) + '</span>'
+    '<span style="color:#9999BB">&#128203; ' + str(len(results)) + ' scripts</span>'
+    '<span style="color:#9999BB">&#128197; ' + fecha + '</span>'
+    '</div>'
+    '<div class="stats-row">'
+    '<div class="stat-box green">&#10003; ' + str(passed) + ' exitosos</div>'
+    '<div class="stat-box red">&#10007; ' + str(failed) + ' fallidos</div>'
+    '<div class="stat-box blue">&#9201; ' + _dur(total_dur) + '</div>'
+    '</div>'
+    '<div class="progress-wrap"><div class="progress-bar" style="width:' + str(pct) + '%;background:' + ok_color + '"></div></div>'
+    '<div style="color:#8888AA;font-size:13px">' + str(pct) + '% exitoso</div>'
+    '</div>'
+    '<div class="scripts-title">&#128203; Scripts ejecutados</div>'
+    + rows +
+    '<div class="footer">Generado por HakaBuddy CI Runner &bull; ' + fecha + '</div>'
+    '<script>' + JS + '</script>'
+    '</body></html>'
+)
 
 Path("report.html").write_text(html, encoding="utf-8")
-print(f"\n\U0001f4c4 Reporte HTML generado: report.html")
+print("\n\U0001f4c4 Reporte HTML generado: report.html")
 
 sys.exit(0 if failed == 0 else 1)
