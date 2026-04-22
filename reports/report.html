@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>HakaBuddy CI &mdash; Reporte Suite</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Calibri,sans-serif;background:#12132A;color:#E8E8F0;padding:32px;font-size:15px;line-height:1.6}
+.main-header{background:#1E1F33;border-radius:12px;padding:24px 32px;margin-bottom:24px;border-left:5px solid #00D4FF}
+.suite-title{font-size:24px;font-weight:700;color:#00D4FF;margin-bottom:12px}
+.status-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.status-badge{padding:7px 22px;border-radius:22px;font-weight:700;font-size:16px;border:2px solid}
+.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.stat-box{padding:6px 16px;border-radius:8px;font-weight:bold;font-size:14px}
+.stat-box.green{background:#1B3A1F;color:#28A745;border:1px solid #28A745}
+.stat-box.red{background:#3A1B1B;color:#DC3545;border:1px solid #DC3545}
+.stat-box.blue{background:#1A2A3A;color:#00D4FF;border:1px solid #00D4FF}
+.progress-wrap{background:#2A2B3E;border-radius:6px;height:8px;overflow:hidden;margin-bottom:6px}
+.progress-bar{height:8px;border-radius:6px}
+.scripts-title{font-size:18px;font-weight:700;color:#00D4FF;margin-bottom:16px}
+.script-acc{background:#1E1F33;border-radius:10px;margin-bottom:12px;overflow:hidden}
+.script-head{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;transition:background .15s}
+.script-head:hover{background:#252640}
+.script-idx{background:#252640;color:#8888AA;padding:2px 8px;border-radius:5px;font-size:13px;font-weight:700;min-width:30px;text-align:center;flex-shrink:0}
+.script-name-lbl{font-weight:700;color:#FFF;font-size:16px;flex:1}
+.script-badge{padding:3px 14px;border-radius:14px;font-size:13px;font-weight:700;flex-shrink:0}
+.script-dur{color:#8888AA;font-size:13px;flex-shrink:0}
+.script-arrow{color:#8888AA;font-size:12px;transition:transform .2s;display:inline-block;flex-shrink:0}
+.script-body{display:none;padding:0 18px 16px 18px;border-top:1px solid #2E2F45}
+.steps-wrap{margin-top:8px}
+.step-row{background:#252640;border-radius:8px;margin-bottom:6px;overflow:hidden}
+.step-row.step-fail{background:#2D1A1A}
+.step-head{display:flex;align-items:center;gap:12px;padding:10px 14px;transition:background .15s}
+.step-head:hover{background:rgba(255,255,255,.04);border-radius:8px}
+.step-num{background:#1E1F33;color:#8888AA;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:700;min-width:36px;text-align:center;flex-shrink:0}
+.step-desc{font-weight:600;color:#FFF;font-size:14px;flex:1}
+.step-status{font-weight:700;font-size:13px;white-space:nowrap;flex-shrink:0}
+.acc-arrow{color:#8888AA;font-size:11px;transition:transform .2s;display:inline-block;flex-shrink:0}
+.step-body{display:none;padding:0 14px 12px 14px}
+.step-err{color:#FF6B6B;font-size:13px;font-family:Consolas,monospace;background:#3D1A1A;padding:6px 10px;border-radius:5px;margin-top:6px;white-space:pre-wrap}
+.step-img{max-width:100%;border-radius:6px;border:1px solid #3A3B50;margin-top:8px;display:block}
+.error-box{background:#2D1A1A;border:1px solid #DC3545;border-radius:8px;padding:14px;margin:10px 0}
+.error-title{color:#DC3545;font-weight:700;margin-bottom:6px}
+.error-content{color:#FFAAAA;font-size:12px;white-space:pre-wrap;font-family:Consolas,monospace}
+.footer{text-align:center;color:#555577;font-size:12px;margin-top:24px}
+</style></head><body><div class="main-header"><div class="suite-title">&#127917; HakaBuddy CI &mdash; Reporte de Suite</div><div class="status-row"><span class="status-badge" style="background:#1B3A1F;color:#28A745;border-color:#28A745">✓ EXITOSO</span><span style="color:#9999BB">⏱ 1s</span><span style="color:#9999BB">&#128203; 1 scripts</span><span style="color:#9999BB">&#128197; 22/04/2026 15:12:17</span></div><div class="stats-row"><div class="stat-box green">&#10003; 1 exitosos</div><div class="stat-box red">&#10007; 0 fallidos</div><div class="stat-box blue">⏱ 1s</div></div><div class="progress-wrap"><div class="progress-bar" style="width:100%;background:#28A745"></div></div><div style="color:#8888AA;font-size:13px">100% exitoso</div></div><div class="scripts-title">&#128203; Scripts ejecutados</div>
+<div class="script-acc">
+  <div class="script-head" onclick="toggleScript(this)">
+    <span class="script-idx">1</span>
+    <span class="script-name-lbl">Prueba_Rapída.py</span>
+    <span class="script-badge" style="background:#1B3A1F;color:#28A745;border:1px solid #28A745">✓ PASS</span>
+    <span class="script-dur">⏱ 1s</span>
+    <span class="script-arrow">&#9658;</span>
+  </div>
+  <div class="script-body"><div class="steps-wrap"></div></div>
+</div><div class="footer">Generado por HakaBuddy CI Runner &bull; 22/04/2026 15:12:17</div><script>
+function toggleScript(h){
+  var b=h.nextElementSibling,a=h.querySelector('.script-arrow');
+  if(!b)return;
+  b.style.display=b.style.display==='block'?'none':'block';
+  if(a)a.style.transform=b.style.display==='block'?'rotate(90deg)':'rotate(0deg)';
+}
+function toggleAcc(h){
+  var b=h.nextElementSibling,a=h.querySelector('.acc-arrow');
+  if(!b)return;
+  b.style.display=b.style.display==='block'?'none':'block';
+  if(a)a.style.transform=b.style.display==='block'?'rotate(90deg)':'rotate(0deg)';
+}
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.script-acc').forEach(function(acc){
+    var badge=acc.querySelector('.script-badge');
+    if(badge&&badge.textContent.includes('FAIL')){
+      toggleScript(acc.querySelector('.script-head'));
+    }
+  });
+});
+</script></body></html>
