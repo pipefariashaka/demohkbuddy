@@ -7,6 +7,11 @@ on:
     branches: [ master ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
   playwright-tests:
     runs-on: ubuntu-latest
@@ -30,7 +35,7 @@ jobs:
       - name: Run tests
         run: python runner.py
 
-      - name: Upload results
+      - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -38,4 +43,15 @@ jobs:
           path: |
             results.json
             report.html
+            trace.zip
           if-no-files-found: warn
+
+      - name: Publish report to GitHub Pages
+        if: always() && github.ref == 'refs/heads/master'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          include_files: report.html
+          destination_dir: reports
+          commit_message: 'ci: update test report'
