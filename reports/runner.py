@@ -109,9 +109,14 @@ for name in SCRIPTS:
             ss_dir.mkdir(parents=True, exist_ok=True)
             steps_json = str(ss_dir / "steps.json")
 
-            # _build_instrumented_script retorna el código, no la ruta
+            # Escribir el source ya patcheado a un archivo temporal para instrumentar
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False, encoding="utf-8") as tmp_src:
+                tmp_src.write(source)
+                patched_path = tmp_src.name
+
+            # _build_instrumented_script recibe el archivo patcheado
             instrumented_code = sr._build_instrumented_script(
-                str(path), str(ss_dir), steps_json,
+                patched_path, str(ss_dir), steps_json,
                 browser_config={
                     "headless": True,
                     "slow_mo": 0,
@@ -119,6 +124,10 @@ for name in SCRIPTS:
                     "timeout": 90000,
                 }
             )
+            try:
+                os.unlink(patched_path)
+            except Exception:
+                pass
             
             # Escribir el código instrumentado a un archivo temporal
             with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False, encoding="utf-8") as tmp:
@@ -126,6 +135,10 @@ for name in SCRIPTS:
                 instrumented_path = tmp.name
             
             t0 = time.time()
+            if IS_CI:
+                print(f"[DEBUG] Script instrumentado para {name}:")
+                print(instrumented_code[:1500])
+                print("---")
             r = subprocess.run([sys.executable, instrumented_path], capture_output=True, text=True)
             duration = round(time.time() - t0, 1)
             try:

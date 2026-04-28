@@ -2,8 +2,8 @@
   {
     "script": "script_test60_20260427_215225.py",
     "status": "FAIL",
-    "duration": 92.8,
-    "error": "playwright._impl._errors.TimeoutError: Locator.click: Timeout 90000ms exceeded.",
+    "duration": 92.2,
+    "error": "playwright._impl._errors.TimeoutError: Timeout 90000ms exceeded.",
     "steps": [
       {
         "num": 1,
@@ -59,8 +59,8 @@
   {
     "script": "Prueba_hakalab_2.py",
     "status": "FAIL",
-    "duration": 90.9,
-    "error": "playwright._impl._errors.TimeoutError: Locator.click: Timeout 90000ms exceeded.",
+    "duration": 91.0,
+    "error": "playwright._impl._errors.TimeoutError: Timeout 90000ms exceeded.",
     "steps": [
       {
         "num": 1,
