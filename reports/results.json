@@ -1,94 +1,94 @@
 [
   {
     "script": "script_test60_20260427_215225.py",
-    "status": "FAIL",
-    "duration": 92.2,
-    "error": "playwright._impl._errors.TimeoutError: Timeout 90000ms exceeded.",
+    "status": "PASS",
+    "duration": 4.8,
+    "error": "",
     "steps": [
       {
         "num": 1,
         "action": "goto: https://hakalab.com/",
         "success": true,
         "error": "",
-        "screenshot_path": ""
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/script_test60_20260427_215225/step_001.png"
       },
       {
         "num": 2,
         "action": "click [link: Nosotros]",
         "success": true,
         "error": "",
-        "screenshot_path": ""
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/script_test60_20260427_215225/step_002.png"
       },
       {
         "num": 3,
         "action": "click [Contacto]",
         "success": true,
         "error": "",
-        "screenshot_path": ""
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/script_test60_20260427_215225/step_003.png"
       },
       {
         "num": 4,
         "action": "click [textbox: Ingresa tu nombre]",
         "success": true,
         "error": "",
-        "screenshot_path": ""
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/script_test60_20260427_215225/step_004.png"
       },
       {
         "num": 5,
         "action": "fill: Felip Farias [textbox: Ingresa tu nombre]",
         "success": true,
         "error": "",
-        "screenshot_path": ""
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/script_test60_20260427_215225/step_005.png"
       },
       {
         "num": 6,
         "action": "click [textbox: Ingresa tu empresa]",
         "success": true,
         "error": "",
-        "screenshot_path": ""
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/script_test60_20260427_215225/step_006.png"
       },
       {
         "num": 7,
         "action": "fill: HAka [textbox: Ingresa tu empresa]",
-        "success": false,
-        "error": "Error en este paso",
-        "screenshot_path": ""
+        "success": true,
+        "error": "",
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/script_test60_20260427_215225/step_007.png"
       }
     ]
   },
   {
     "script": "Prueba_hakalab_2.py",
-    "status": "FAIL",
-    "duration": 91.0,
-    "error": "playwright._impl._errors.TimeoutError: Timeout 90000ms exceeded.",
+    "status": "PASS",
+    "duration": 3.0,
+    "error": "",
     "steps": [
       {
         "num": 1,
         "action": "goto: https://hakalab.com/",
         "success": true,
         "error": "",
-        "screenshot_path": ""
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_hakalab_2/step_001.png"
       },
       {
         "num": 2,
         "action": "click [link: Productos]",
         "success": true,
         "error": "",
-        "screenshot_path": ""
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_hakalab_2/step_002.png"
       },
       {
         "num": 3,
         "action": "click [img: Hakabuddy]",
         "success": true,
         "error": "",
-        "screenshot_path": ""
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_hakalab_2/step_003.png"
       },
       {
         "num": 4,
         "action": "click [#productos-button-hakabuddy]",
-        "success": false,
-        "error": "Error en este paso",
-        "screenshot_path": ""
+        "success": true,
+        "error": "",
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_hakalab_2/step_004.png"
       }
     ]
   }
