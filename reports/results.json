@@ -1,23 +1,94 @@
 [
   {
-    "script": "Prueba_Rap\u00edda.py",
-    "status": "PASS",
-    "duration": 2.7,
-    "error": "",
+    "script": "script_test60_20260427_215225.py",
+    "status": "FAIL",
+    "duration": 31.6,
+    "error": "playwright._impl._errors.TimeoutError: Locator.click: Timeout 30000ms exceeded.",
     "steps": [
       {
         "num": 1,
-        "action": "goto: https://playwright.dev",
+        "action": "goto: https://hakalab.com/",
         "success": true,
         "error": "",
-        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_Rap\u00edda/step_001.png"
+        "screenshot_path": ""
       },
       {
         "num": 2,
-        "action": "click [link: Get started]",
+        "action": "click [link: Nosotros]",
         "success": true,
         "error": "",
-        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_Rap\u00edda/step_002.png"
+        "screenshot_path": ""
+      },
+      {
+        "num": 3,
+        "action": "click [Contacto]",
+        "success": true,
+        "error": "",
+        "screenshot_path": ""
+      },
+      {
+        "num": 4,
+        "action": "click [textbox: Ingresa tu nombre]",
+        "success": true,
+        "error": "",
+        "screenshot_path": ""
+      },
+      {
+        "num": 5,
+        "action": "fill: Felip Farias [textbox: Ingresa tu nombre]",
+        "success": true,
+        "error": "",
+        "screenshot_path": ""
+      },
+      {
+        "num": 6,
+        "action": "click [textbox: Ingresa tu empresa]",
+        "success": true,
+        "error": "",
+        "screenshot_path": ""
+      },
+      {
+        "num": 7,
+        "action": "fill: HAka [textbox: Ingresa tu empresa]",
+        "success": false,
+        "error": "Error en este paso",
+        "screenshot_path": ""
+      }
+    ]
+  },
+  {
+    "script": "Prueba_hakalab_2.py",
+    "status": "FAIL",
+    "duration": 30.9,
+    "error": "playwright._impl._errors.TimeoutError: Locator.click: Timeout 30000ms exceeded.",
+    "steps": [
+      {
+        "num": 1,
+        "action": "goto: https://hakalab.com/",
+        "success": true,
+        "error": "",
+        "screenshot_path": ""
+      },
+      {
+        "num": 2,
+        "action": "click [link: Productos]",
+        "success": true,
+        "error": "",
+        "screenshot_path": ""
+      },
+      {
+        "num": 3,
+        "action": "click [img: Hakabuddy]",
+        "success": true,
+        "error": "",
+        "screenshot_path": ""
+      },
+      {
+        "num": 4,
+        "action": "click [#productos-button-hakabuddy]",
+        "success": false,
+        "error": "Error en este paso",
+        "screenshot_path": ""
       }
     ]
   }
