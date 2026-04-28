@@ -116,6 +116,10 @@ def _build_instrumented_script(original_path: str, screenshots_dir: str,
         ctx_kwargs["locale"] = f"'{cfg['locale']}'"
     if cfg.get("timezone"):
         ctx_kwargs["timezone_id"] = f"'{cfg['timezone']}'"
+    if cfg.get("user_agent"):
+        ctx_kwargs["user_agent"] = f"'{cfg['user_agent']}'"
+    if cfg.get("extra_headers"):
+        ctx_kwargs["extra_http_headers"] = repr(cfg["extra_headers"])
 
     # Kwargs para launch() — reemplazamos headless y agregamos slow_mo
     # slow_mo va en launch(), no en codegen
