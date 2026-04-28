@@ -7,8 +7,10 @@ from pathlib import Path
 from datetime import datetime
 
 SCRIPTS = [
-    "Prueba_Rap\u00edda.py"
+    "script_test60_20260427_215225.py",
+    "Prueba_hakalab_2.py"
 ]
+SUITE_NAME = "Suit web haka"
 
 IS_CI = os.environ.get("CI", "") == "true" or not os.environ.get("DISPLAY", "")
 
@@ -326,10 +328,10 @@ document.addEventListener('DOMContentLoaded',function(){
 
 html = (
     '<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">'
-    '<title>HakaBuddy CI &mdash; Reporte Suite</title>'
+    '<title>' + _esc(SUITE_NAME) + ' &mdash; HakaBuddy CI</title>'
     '<style>' + CSS + '</style></head><body>'
     '<div class="main-header">'
-    '<div class="suite-title">&#127917; HakaBuddy CI &mdash; Reporte de Suite</div>'
+    '<div class="suite-title">&#127917; ' + _esc(SUITE_NAME) + '</div>'
     '<div class="status-row">'
     '<span class="status-badge" style="background:' + ok_bg + ';color:' + ok_color + ';border-color:' + ok_color + '">' + icon + ' ' + status_txt + '</span>'
     '<span style="color:#9999BB">\u23f1 ' + _dur(total_dur) + '</span>'
