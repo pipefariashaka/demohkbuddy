@@ -2,7 +2,7 @@
   {
     "script": "script_test60_20260427_215225.py",
     "status": "PASS",
-    "duration": 4.8,
+    "duration": 6.5,
     "error": "",
     "steps": [
       {
@@ -59,7 +59,7 @@
   {
     "script": "Prueba_hakalab_2.py",
     "status": "PASS",
-    "duration": 3.0,
+    "duration": 3.1,
     "error": "",
     "steps": [
       {
