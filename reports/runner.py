@@ -15,11 +15,33 @@ SUITE_NAME = "Suit web haka"
 IS_CI = os.environ.get("CI", "") == "true" or not os.environ.get("DISPLAY", "")
 
 def patch_headless(source):
+    # 1. Quitar channel="chrome" / channel='chrome' — en CI solo hay Chromium
+    source = re.sub(r',?\s*channel\s*=\s*["\']chrome["\']', "", source)
+    source = re.sub(r'channel\s*=\s*["\']chrome["\'],?\s*', "", source)
+
+    # 2. headless=True y slow_mo=0
     source = re.sub(r"headless\s*=\s*False", "headless=True", source)
     source = re.sub(r"slow_mo\s*=\s*\d+", "slow_mo=0", source)
-    source = source.replace(
-        "page = context.new_page()",
-        "page = context.new_page()\n    page.set_default_timeout(60000)"
+
+    # 3. Inyectar args de CI en chromium.launch(...) — necesario en GitHub Actions / GitLab CI
+    #    Preserva todos los kwargs existentes y agrega los args al final
+    ci_args = "['--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--disable-setuid-sandbox']"
+    def _inject_args(m):
+        call = m.group(0)
+        if "args=" in call:
+            return call  # ya tiene args, no tocar
+        # Insertar antes del cierre del paréntesis
+        call = call.rstrip()
+        if call.endswith(")"):
+            return call[:-1] + f", args={ci_args})"
+        return call + f", args={ci_args}"
+    source = re.sub(r'\.launch\([^)]*\)', _inject_args, source)
+
+    # 4. Aumentar timeout global a 90s — los servidores CI son más lentos
+    source = re.sub(
+        r'(\bpage\s*=\s*(?:context|browser)\.new_page\(\))',
+        r'\1\n    page.set_default_timeout(90000)',
+        source
     )
     return source
 
@@ -70,7 +92,12 @@ for name in SCRIPTS:
             # _build_instrumented_script retorna el código, no la ruta
             instrumented_code = sr._build_instrumented_script(
                 str(path), str(ss_dir), steps_json,
-                browser_config={"headless": True, "slow_mo": 0}
+                browser_config={
+                    "headless": True,
+                    "slow_mo": 0,
+                    "args": ["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--disable-setuid-sandbox"],
+                    "timeout": 90000,
+                }
             )
             
             # Escribir el código instrumentado a un archivo temporal
