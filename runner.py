@@ -37,16 +37,23 @@ def patch_headless(source):
         return call + f", args={ci_args}"
     source = re.sub(r'\.launch\([^)]*\)', _inject_args, source)
 
-    # 4. Forzar viewport 1280x720 en new_context() para que el menú desktop se muestre
-    #    (evita que el sitio muestre menú hamburguesa en headless)
+    # 4. Forzar viewport 1280x720 y user-agent en new_context()
     def _inject_viewport(m):
         call = m.group(0)
-        if "viewport" in call:
-            return call  # ya tiene viewport
+        ua = "user_agent='Haka2026'"
+        if "viewport" in call and "user_agent" in call:
+            return call
         call = call.rstrip()
-        if call.endswith(")"):
-            return call[:-1] + ", viewport={'width':1280,'height':720})"
-        return call + ", viewport={'width':1280,'height':720}"
+        if "viewport" not in call and "user_agent" not in call:
+            if call.endswith(")"):
+                return call[:-1] + f", viewport={{'width':1280,'height':720}}, {ua})"
+        elif "viewport" in call and "user_agent" not in call:
+            if call.endswith(")"):
+                return call[:-1] + f", {ua})"
+        elif "user_agent" not in call:
+            if call.endswith(")"):
+                return call[:-1] + f", {ua})"
+        return call
     source = re.sub(r'\.new_context\([^)]*\)', _inject_viewport, source)
 
     # 5. Después de new_page(): timeout 90s + wait_for_load_state
@@ -59,7 +66,7 @@ def patch_headless(source):
     # 6. Después de cada goto(): esperar que la red esté idle
     source = re.sub(
         r'(page\.goto\([^)]+\))',
-        r'\1\n    page.wait_for_load_state("networkidle")',
+        r'\1\n    page.wait_for_load_state("networkidle")\n    page.screenshot(path="ci_debug_goto.png")',
         source
     )
 

@@ -50,6 +50,7 @@ jobs:
             results.json
             report.html
             screenshots/
+            ci_debug_goto.png
           if-no-files-found: warn
 
       - name: Publish report to GitHub Pages
