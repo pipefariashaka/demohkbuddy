@@ -126,6 +126,23 @@ def _build_instrumented_script(original_path: str, screenshots_dir: str,
         launch_overrides["headless"] = "False"
     if cfg.get("slow_mo", 0) > 0:
         launch_overrides["slow_mo"] = str(cfg["slow_mo"])
+    if cfg.get("args"):
+        launch_overrides["args"] = repr(cfg["args"])
+
+    # En CI (cuando viene con args): quitar channel="chrome" — solo existe Chromium en CI
+    is_ci = bool(cfg.get("args"))
+    if is_ci:
+        original_lines = [
+            re.sub(r',?\s*channel\s*=\s*["\']chrome["\']', "", l)
+            for l in original_lines
+        ]
+        original_lines = [
+            re.sub(r'channel\s*=\s*["\']chrome["\'],?\s*', "", l)
+            for l in original_lines
+        ]
+
+    # Timeout global para page (en ms)
+    page_timeout = cfg.get("timeout", 0)
 
     action_patterns = [
         r'\.goto\(', r'\.click\(', r'\.fill\(', r'\.press\(',
@@ -188,6 +205,12 @@ def _build_instrumented_script(original_path: str, screenshots_dir: str,
             indent = len(line) - len(line.lstrip())
             sp = " " * indent
             instrumented.append(f"{sp}page.set_viewport_size({{'width': 1920, 'height': 1080}})\n")
+
+        # Inyectar set_default_timeout si se configuró
+        if page_timeout and re.search(r'\bpage\s*=.*\.new_page\(\)', line):
+            indent = len(line) - len(line.lstrip())
+            sp = " " * indent
+            instrumented.append(f"{sp}page.set_default_timeout({page_timeout})\n")
 
         stripped = line.strip()
         if not stripped or stripped.startswith("#"):
