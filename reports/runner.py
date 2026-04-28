@@ -23,26 +23,46 @@ def patch_headless(source):
     source = re.sub(r"headless\s*=\s*False", "headless=True", source)
     source = re.sub(r"slow_mo\s*=\s*\d+", "slow_mo=0", source)
 
-    # 3. Inyectar args de CI en chromium.launch(...) — necesario en GitHub Actions / GitLab CI
-    #    Preserva todos los kwargs existentes y agrega los args al final
-    ci_args = "['--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--disable-setuid-sandbox']"
+    # 3. Inyectar args de CI en chromium.launch(...)
+    ci_args = ("['--no-sandbox','--disable-dev-shm-usage','--disable-gpu',"
+               "'--disable-setuid-sandbox','--window-size=1280,720',"
+               "'--disable-blink-features=AutomationControlled']")
     def _inject_args(m):
         call = m.group(0)
         if "args=" in call:
-            return call  # ya tiene args, no tocar
-        # Insertar antes del cierre del paréntesis
+            return call
         call = call.rstrip()
         if call.endswith(")"):
             return call[:-1] + f", args={ci_args})"
         return call + f", args={ci_args}"
     source = re.sub(r'\.launch\([^)]*\)', _inject_args, source)
 
-    # 4. Aumentar timeout global a 90s — los servidores CI son más lentos
+    # 4. Forzar viewport 1280x720 en new_context() para que el menú desktop se muestre
+    #    (evita que el sitio muestre menú hamburguesa en headless)
+    def _inject_viewport(m):
+        call = m.group(0)
+        if "viewport" in call:
+            return call  # ya tiene viewport
+        call = call.rstrip()
+        if call.endswith(")"):
+            return call[:-1] + ", viewport={'width':1280,'height':720})"
+        return call + ", viewport={'width':1280,'height':720}"
+    source = re.sub(r'\.new_context\([^)]*\)', _inject_viewport, source)
+
+    # 5. Después de new_page(): timeout 90s + wait_for_load_state
     source = re.sub(
         r'(\bpage\s*=\s*(?:context|browser)\.new_page\(\))',
         r'\1\n    page.set_default_timeout(90000)',
         source
     )
+
+    # 6. Después de cada goto(): esperar que la red esté idle
+    source = re.sub(
+        r'(page\.goto\([^)]+\))',
+        r'\1\n    page.wait_for_load_state("networkidle")',
+        source
+    )
+
     return source
 
 def _esc(t):
