@@ -678,7 +678,7 @@ html = (
 
     # ── HEADER card ──
     '<div class="card" style="border-left:4px solid #00D4FF">'
-    '<div style="font-size:22px;font-weight:bold;color:#00D4FF;text-align:center;margin-bottom:10px">\U0001f3ad ' + _esc(SUITE_NAME) + '</div>'
+    '<div style="font-size:22px;font-weight:bold;color:#00D4FF;text-align:center;margin-bottom:10px">Reporte de prueba automatizada</div>'
     '<div style="display:flex;flex-wrap:wrap;padding-top:10px;border-top:1px solid #2A4A6A">'
     + _info("Fecha", fecha)
     + _info("Duraci\u00f3n", _dur(total_dur))
