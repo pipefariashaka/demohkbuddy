@@ -8,7 +8,8 @@ from datetime import datetime
 
 SCRIPTS = [
     "script_test60_20260427_215225.py",
-    "Prueba_hakalab_2.py"
+    "Prueba_hakalab_2.py",
+    "Prueba_1111.py"
 ]
 SUITE_NAME = "Suit web haka"
 
@@ -86,6 +87,26 @@ def _img_b64(path):
     except Exception:
         return ""
 
+def _substitute_fills(source, variables, data_set):
+    """Replace .fill() values in source with data_set values (for outline)."""
+    lines = source.split('\n')
+    # Build line_number -> (default_value, new_value) map
+    for var in variables:
+        name = var.get("name", "")
+        default_val = var.get("default_value", "")
+        new_val = data_set.get(name, default_val)
+        if default_val != new_val:
+            # Replace in all lines that have .fill("default_val")
+            old_escaped = re.escape(default_val)
+            for i, line in enumerate(lines):
+                if '.fill(' in line and default_val in line:
+                    lines[i] = re.sub(
+                        r'(\.fill\(\s*["\'])' + old_escaped + r'(["\'])',
+                        lambda m: m.group(1) + new_val + m.group(2),
+                        line, count=1
+                    )
+    return '\n'.join(lines)
+
 # ── Ejecutar scripts ──────────────────────────────────────────────
 results = []
 base = Path(__file__).parent / "scripts"
@@ -102,6 +123,21 @@ for name in SCRIPTS:
     source = path.read_text(encoding="utf-8")
     if IS_CI:
         source = patch_headless(source)
+
+    # Check for outline data (data-driven testing)
+    outline_json_path = base / (name + ".outline.json")
+    outline_data_sets = []
+    outline_variables = []
+    if outline_json_path.exists():
+        try:
+            with open(outline_json_path, "r", encoding="utf-8") as _of:
+                _odata = json.load(_of)
+            outline_data_sets = _odata.get("data_sets", [])
+            outline_variables = _odata.get("variables", [])
+            if outline_data_sets:
+                print(f"[OUTLINE] {name}: {len(outline_data_sets)} data set(s) found")
+        except Exception as e:
+            print(f"[OUTLINE] Error loading {outline_json_path}: {e}")
 
     # Intentar usar step_runner para capturar pasos y screenshots
     step_runner_path = Path(__file__).parent / "step_runner.py"
@@ -241,8 +277,65 @@ for name in SCRIPTS:
         "status": status,
         "duration": duration,
         "error": error_msg,
-        "steps": steps
+        "steps": steps,
+        "outline_iterations": [],  # Will be populated for outline scripts
     })
+
+    # If outline data exists, re-execute for remaining data sets
+    if outline_data_sets and len(outline_data_sets) > 0:
+        # The first execution used original values — treat as iteration 0 (default)
+        # Now execute for each data set
+        all_iterations = []
+        # Re-run with each data set
+        for ds_idx, ds in enumerate(outline_data_sets):
+            ds_label = ", ".join(f"{k}={v}" for k, v in ds.items())
+            print(f"[OUTLINE] {name} — Iteración {ds_idx+1}/{len(outline_data_sets)}: {ds_label}")
+
+            modified_source = _substitute_fills(source, outline_variables, ds)
+            if IS_CI:
+                modified_source = patch_headless(modified_source)
+
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False, encoding="utf-8") as tmp:
+                tmp.write(modified_source)
+                iter_path = tmp.name
+
+            t0_iter = time.time()
+            r_iter = subprocess.run([sys.executable, iter_path], capture_output=True, text=True, timeout=300)
+            dur_iter = round(time.time() - t0_iter, 1)
+
+            try:
+                os.unlink(iter_path)
+            except Exception:
+                pass
+
+            iter_ok = r_iter.returncode == 0
+            iter_status = "PASS" if iter_ok else "FAIL"
+            iter_error = ""
+            if not iter_ok:
+                stderr_lines_iter = [l for l in r_iter.stderr.splitlines() if l.strip()]
+                relevant_iter = [l for l in stderr_lines_iter if any(x in l for x in ["Error", "Timeout", "assert"])]
+                iter_error = "\n".join(relevant_iter[-3:]) if relevant_iter else r_iter.stderr[-300:]
+
+            print(f"[OUTLINE] [{iter_status}] Iteración {ds_idx+1} ({dur_iter}s)")
+
+            all_iterations.append({
+                "iteration": ds_idx + 1,
+                "data_set": ds,
+                "status": iter_status,
+                "duration": dur_iter,
+                "error": iter_error,
+                "steps": [],  # Steps not captured per-iteration in CI for simplicity
+            })
+
+        # Update the main result with outline data
+        results[-1]["outline_iterations"] = all_iterations
+        iter_passed = sum(1 for it in all_iterations if it["status"] == "PASS")
+        iter_failed = sum(1 for it in all_iterations if it["status"] == "FAIL")
+        results[-1]["status"] = "PASS" if iter_failed == 0 else "FAIL"
+        results[-1]["duration"] = sum(it["duration"] for it in all_iterations)
+        if iter_failed > 0:
+            results[-1]["error"] = f"{iter_failed} de {len(all_iterations)} iteraciones fallaron"
+        print(f"[OUTLINE] {name}: {iter_passed} PASS / {iter_failed} FAIL")
 
 # ── Resumen consola ───────────────────────────────────────────────
 passed  = sum(1 for r in results if r["status"] == "PASS")
@@ -315,6 +408,32 @@ for i, r in enumerate(results):
             '\n</div>'
         )
 
+    # Build outline iterations HTML if present
+    outline_iters_html = ""
+    if r.get("outline_iterations"):
+        iters = r["outline_iterations"]
+        outline_iters_html = '<div style="margin-top:10px">'
+        outline_iters_html += '<div style="color:#00D4FF;font-weight:bold;font-size:14px;margin-bottom:8px">📊 Iteraciones (' + str(len(iters)) + ')</div>'
+        for it in iters:
+            it_ok = it["status"] == "PASS"
+            it_color = "#28A745" if it_ok else "#DC3545"
+            it_icon = "\u2713" if it_ok else "\u2717"
+            it_label = ", ".join(f"{k}={v}" for k, v in it.get("data_set", {}).items())
+            it_err = ""
+            if it.get("error"):
+                it_err = '<div class="step-err">' + _esc(it["error"]) + '</div>'
+            outline_iters_html += (
+                '<div style="background:#252640;border-radius:6px;margin-bottom:6px;padding:10px 14px;'
+                'border-left:3px solid ' + it_color + '">'
+                '<div style="display:flex;align-items:center;gap:10px">'
+                '<span style="color:#8888AA;font-weight:bold">#' + str(it["iteration"]) + '</span>'
+                '<span style="color:#FFF;flex:1">' + _esc(it_label[:60]) + '</span>'
+                '<span style="color:' + it_color + ';font-weight:bold">' + it_icon + ' ' + it["status"] + '</span>'
+                '<span style="color:#8888AA">\u23f1 ' + _dur(it["duration"]) + '</span>'
+                '</div>' + it_err + '</div>'
+            )
+        outline_iters_html += '</div>'
+
     scripts_html += (
         '\n<div class="script-acc">'
         '\n  <div class="script-head" onclick="toggleScript(this)">'
@@ -322,9 +441,10 @@ for i, r in enumerate(results):
         '\n    <span class="script-name-lbl">' + _esc(r["script"]) + '</span>'
         '\n    <span class="script-badge" style="background:' + s_bg + ';color:' + s_color + ';border:1px solid ' + s_color + '">' + s_icon + ' ' + r["status"] + '</span>'
         '\n    <span class="script-dur">\u23f1 ' + _dur(r["duration"]) + '</span>'
+        + ('\n    <span style="color:#F5A623;font-size:12px">📊 ' + str(len(r.get("outline_iterations", []))) + ' iter.</span>' if r.get("outline_iterations") else '') +
         '\n    <span class="script-arrow">&#9658;</span>'
         '\n  </div>'
-        '\n  <div class="script-body">' + err_script + '<div class="steps-wrap">' + pasos_html + '</div></div>'
+        '\n  <div class="script-body">' + err_script + '<div class="steps-wrap">' + pasos_html + '</div>' + outline_iters_html + '</div>'
         '\n</div>'
     )
 
