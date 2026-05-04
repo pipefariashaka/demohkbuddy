@@ -422,8 +422,10 @@ for i, r in enumerate(results):
 
     # Build outline iterations HTML if present
     outline_iters_html = ""
+    hide_top_steps = False
     if r.get("outline_iterations"):
         iters = r["outline_iterations"]
+        hide_top_steps = True
         outline_iters_html = '<div style="margin-top:10px">'
         outline_iters_html += '<div style="color:#00D4FF;font-weight:bold;font-size:14px;margin-bottom:8px">📊 Iteraciones (' + str(len(iters)) + ')</div>'
         for it in iters:
@@ -434,17 +436,54 @@ for i, r in enumerate(results):
             it_err = ""
             if it.get("error"):
                 it_err = '<div class="step-err">' + _esc(it["error"]) + '</div>'
+
+            # Pasos de esta iteración — usar clases del reporte local
+            it_steps_html = ""
+            for st in it.get("steps", []):
+                st_num = st.get("num", "")
+                st_ok = st.get("success", True)
+                st_desc = st.get("action", "")
+                st_err = st.get("error", "")
+                st_ss = st.get("screenshot_path", "")
+                st_c = "#28A745" if st_ok else "#DC3545"
+                st_i = "\u2713" if st_ok else "\u2717"
+                st_img = ""
+                if st_ss and os.path.exists(st_ss):
+                    b64 = _img_b64(st_ss)
+                    if b64:
+                        st_img = '<img src="data:image/png;base64,' + b64 + '" class="paso-img">'
+                st_err_h = '<div class="step-err">' + _esc(st_err) + '</div>' if st_err else ""
+                st_body = bool(st_img or st_err_h)
+                st_body_h = '<div class="paso-body">' + st_err_h + st_img + '</div>' if st_body else ""
+                st_arrow = '<span class="acc-arrow">\u25b6</span>' if st_body else '<span style="width:16px;display:inline-block"></span>'
+                st_cursor = "cursor:pointer;" if st_body else ""
+                it_steps_html += (
+                    '\n<div class="paso-acc' + (' fail' if not st_ok else '') + '">'
+                    '\n  <div class="paso-head" style="' + st_cursor + '" onclick="toggleAcc(this)">'
+                    '\n    <span class="paso-num">#' + str(st_num) + '</span>'
+                    '\n    <span class="paso-titulo">' + _esc(st_desc) + '</span>'
+                    '\n    <span class="paso-estado" style="color:' + st_c + '">' + st_i + ' ' + ('Exitoso' if st_ok else 'Fallido') + '</span>'
+                    '\n    ' + st_arrow +
+                    '\n  </div>' + st_body_h +
+                    '\n</div>'
+                )
+
             outline_iters_html += (
-                '<div style="background:#252640;border-radius:6px;margin-bottom:6px;padding:10px 14px;'
-                'border-left:3px solid ' + it_color + '">'
-                '<div style="display:flex;align-items:center;gap:10px">'
-                '<span style="color:#8888AA;font-weight:bold">#' + str(it["iteration"]) + '</span>'
-                '<span style="color:#FFF;flex:1">' + _esc(it_label[:60]) + '</span>'
-                '<span style="color:' + it_color + ';font-weight:bold">' + it_icon + ' ' + it["status"] + '</span>'
-                '<span style="color:#8888AA">\u23f1 ' + _dur(it["duration"]) + '</span>'
-                '</div>' + it_err + '</div>'
+                '<div class="script-acc" style="margin:6px 0">'
+                '<div class="script-head" onclick="toggleScript(this)" style="padding:10px 14px">'
+                '<span class="script-idx">#' + str(it["iteration"]) + '</span>'
+                '<span class="script-name-lbl" style="font-size:14px">' + _esc(it_label[:60]) + '</span>'
+                '<span class="script-badge" style="background:' + ("#1B3A1F" if it_ok else "#3A1B1B") + ';color:' + it_color + ';border:1px solid ' + it_color + '">' + it_icon + ' ' + it["status"] + '</span>'
+                '<span class="script-dur">\u23f1 ' + _dur(it["duration"]) + '</span>'
+                '<span class="script-arrow">&#9658;</span>'
+                '</div>'
+                '<div class="script-body">' + it_err + '<div class="steps-wrap">' + it_steps_html + '</div></div>'
+                '</div>'
             )
         outline_iters_html += '</div>'
+
+    # Build script body — hide top-level steps for outline scripts
+    top_steps = '' if hide_top_steps else '<div class="steps-wrap">' + pasos_html + '</div>'
 
     scripts_html += (
         '\n<div class="script-acc">'
@@ -456,7 +495,7 @@ for i, r in enumerate(results):
         + ('\n    <span style="color:#F5A623;font-size:12px">📊 ' + str(len(r.get("outline_iterations", []))) + ' iter.</span>' if r.get("outline_iterations") else '') +
         '\n    <span class="script-arrow">&#9658;</span>'
         '\n  </div>'
-        '\n  <div class="script-body">' + err_script + '<div class="steps-wrap">' + pasos_html + '</div>' + outline_iters_html + '</div>'
+        '\n  <div class="script-body">' + err_script + top_steps + outline_iters_html + '</div>'
         '\n</div>'
     )
 
@@ -499,7 +538,25 @@ body{font-family:Calibri,sans-serif;background:#140323;color:#FFF;padding:24px;m
 .error-box{background:#2D1A1A;border:1px solid #DC3545;border-radius:8px;padding:14px;margin:10px 0}
 .error-title{color:#DC3545;font-weight:700;margin-bottom:6px}
 .error-content{color:#FFAAAA;font-size:12px;white-space:pre-wrap;font-family:Consolas,monospace}
-.footer{text-align:center;color:#555577;font-size:12px;margin-top:24px}
+.footer{text-align:center;color:#7EB8D4;font-size:12px;margin-top:24px}
+.card{background:#1A2A4A;border-radius:10px;padding:20px 24px;margin-bottom:16px;border-left:4px solid #00D4FF}
+.section-title{font-size:15px;font-weight:bold;color:#00D4FF;margin-bottom:12px;letter-spacing:.5px}
+.info-label{color:#7EB8D4;font-size:11px;text-transform:uppercase}
+.info-value{color:#FFF;font-size:13px;font-weight:bold}
+.info-item{margin-right:24px;margin-top:6px;display:inline-block}
+.badge{padding:5px 18px;border-radius:20px;font-weight:bold;font-size:14px;display:inline-block}
+.badge-ok{background:#0D3320;color:#28A745;border:2px solid #28A745}
+.badge-fail{background:#3A1B1B;color:#DC3545;border:2px solid #DC3545}
+.stats-text{color:#7EB8D4;font-size:13px}
+.paso-acc{background:#1A2A4A;border:1px solid #2A4A6A;border-radius:8px;margin-bottom:8px;overflow:hidden}
+.paso-acc.fail{border-color:#DC3545}
+.paso-head{padding:14px 16px;display:flex;align-items:center;gap:12px}
+.paso-head:hover{background:rgba(255,255,255,.03)}
+.paso-num{background:#2A2B3E;color:#8888AA;padding:2px 8px;border-radius:4px;font-size:12px;font-weight:bold;min-width:36px;text-align:center;flex-shrink:0}
+.paso-titulo{font-weight:bold;color:#FFF;font-size:14px;flex:1}
+.paso-estado{font-weight:bold;font-size:13px;flex-shrink:0}
+.paso-body{display:none;padding:0 16px 14px 16px}
+.paso-img{max-width:100%;border-radius:6px;border:1px solid #3A3B50;margin-top:8px;display:block}
 """
 
 JS = """
