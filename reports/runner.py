@@ -307,18 +307,106 @@ for name in SCRIPTS:
             if IS_CI:
                 modified_source = patch_headless(modified_source)
 
-            with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False, encoding="utf-8") as tmp:
-                tmp.write(modified_source)
-                iter_path = tmp.name
+            iter_steps = []
 
-            t0_iter = time.time()
-            r_iter = subprocess.run([sys.executable, iter_path], capture_output=True, text=True, timeout=300)
-            dur_iter = round(time.time() - t0_iter, 1)
+            # Intentar instrumentar con step_runner para capturar pasos
+            if step_runner_path.exists():
+                try:
+                    iter_ss_dir = Path(__file__).parent / "screenshots" / (name.replace(".py", "") + f"_iter{ds_idx+2}")
+                    iter_ss_dir.mkdir(parents=True, exist_ok=True)
+                    iter_steps_json = str(iter_ss_dir / "steps.json")
 
-            try:
-                os.unlink(iter_path)
-            except Exception:
-                pass
+                    with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False, encoding="utf-8") as tmp_src:
+                        tmp_src.write(modified_source)
+                        iter_patched_path = tmp_src.name
+
+                    iter_instrumented_code = sr._build_instrumented_script(
+                        iter_patched_path, str(iter_ss_dir), iter_steps_json,
+                        browser_config={
+                            "headless": True,
+                            "slow_mo": 0,
+                            "args": ["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--disable-setuid-sandbox"],
+                            "timeout": 90000,
+                        }
+                    )
+                    try:
+                        os.unlink(iter_patched_path)
+                    except Exception:
+                        pass
+
+                    with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False, encoding="utf-8") as tmp:
+                        tmp.write(iter_instrumented_code)
+                        iter_path = tmp.name
+
+                    t0_iter = time.time()
+                    r_iter = subprocess.run([sys.executable, iter_path], capture_output=True, text=True, timeout=300)
+                    dur_iter = round(time.time() - t0_iter, 1)
+                    try:
+                        os.unlink(iter_path)
+                    except Exception:
+                        pass
+
+                    # Leer steps capturados
+                    if os.path.exists(iter_steps_json):
+                        with open(iter_steps_json) as f:
+                            raw_iter_steps = json.load(f)
+                        iter_screenshots_map = raw_iter_steps.get("screenshots", {})
+                        parsed_iter_steps = sr._extract_steps_from_script(modified_source)
+                        for si, ps in enumerate(parsed_iter_steps):
+                            is_last = (si == len(parsed_iter_steps) - 1)
+                            step_success = r_iter.returncode == 0 or not is_last
+                            action_desc = ps.action
+                            if ps.value:
+                                action_desc += f": {ps.value}"
+                            if ps.selector:
+                                action_desc += f" [{ps.selector}]"
+                            iter_steps.append({
+                                "num":             ps.num,
+                                "action":          action_desc,
+                                "success":         step_success,
+                                "error":           "" if step_success else "Error en este paso",
+                                "screenshot_path": iter_screenshots_map.get(str(ps.num), ""),
+                            })
+                    else:
+                        parsed_iter_steps = sr._extract_steps_from_script(modified_source)
+                        for si, ps in enumerate(parsed_iter_steps):
+                            is_last = (si == len(parsed_iter_steps) - 1)
+                            step_success = r_iter.returncode == 0 or not is_last
+                            action_desc = ps.action
+                            if ps.value:
+                                action_desc += f": {ps.value}"
+                            if ps.selector:
+                                action_desc += f" [{ps.selector}]"
+                            iter_steps.append({
+                                "num":             ps.num,
+                                "action":          action_desc,
+                                "success":         step_success,
+                                "error":           "" if step_success else "Error en este paso",
+                                "screenshot_path": "",
+                            })
+                except Exception as e:
+                    print(f"[OUTLINE] step_runner error iter {ds_idx+1}: {e} — ejecutando sin instrumentación")
+                    with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False, encoding="utf-8") as tmp:
+                        tmp.write(modified_source)
+                        iter_path = tmp.name
+                    t0_iter = time.time()
+                    r_iter = subprocess.run([sys.executable, iter_path], capture_output=True, text=True, timeout=300)
+                    dur_iter = round(time.time() - t0_iter, 1)
+                    try:
+                        os.unlink(iter_path)
+                    except Exception:
+                        pass
+            else:
+                with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False, encoding="utf-8") as tmp:
+                    tmp.write(modified_source)
+                    iter_path = tmp.name
+                t0_iter = time.time()
+                r_iter = subprocess.run([sys.executable, iter_path], capture_output=True, text=True, timeout=300)
+                dur_iter = round(time.time() - t0_iter, 1)
+                try:
+                    os.unlink(iter_path)
+                except Exception:
+                    pass
 
             iter_ok = r_iter.returncode == 0
             iter_status = "PASS" if iter_ok else "FAIL"
@@ -336,7 +424,7 @@ for name in SCRIPTS:
                 "status": iter_status,
                 "duration": dur_iter,
                 "error": iter_error,
-                "steps": [],  # Steps not captured per-iteration in CI for simplicity
+                "steps": iter_steps,
             })
 
         # Update the main result with outline data
