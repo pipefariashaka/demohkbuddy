@@ -283,10 +283,22 @@ for name in SCRIPTS:
 
     # If outline data exists, re-execute for remaining data sets
     if outline_data_sets and len(outline_data_sets) > 0:
-        # The first execution used original values — treat as iteration 0 (default)
-        # Now execute for each data set
         all_iterations = []
-        # Re-run with each data set
+
+        # Iteración 0: la ejecución original (ya ejecutada arriba)
+        original_ds = {}
+        for v in outline_variables:
+            original_ds[v.get("name", "")] = v.get("default_value", "")
+        all_iterations.append({
+            "iteration": 1,
+            "data_set": original_ds,
+            "status": status,
+            "duration": duration,
+            "error": error_msg,
+            "steps": steps,
+        })
+
+        # Iteraciones adicionales con data sets
         for ds_idx, ds in enumerate(outline_data_sets):
             ds_label = ", ".join(f"{k}={v}" for k, v in ds.items())
             print(f"[OUTLINE] {name} — Iteración {ds_idx+1}/{len(outline_data_sets)}: {ds_label}")
@@ -319,7 +331,7 @@ for name in SCRIPTS:
             print(f"[OUTLINE] [{iter_status}] Iteración {ds_idx+1} ({dur_iter}s)")
 
             all_iterations.append({
-                "iteration": ds_idx + 1,
+                "iteration": ds_idx + 2,
                 "data_set": ds,
                 "status": iter_status,
                 "duration": dur_iter,
