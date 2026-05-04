@@ -1,0 +1,20 @@
+{
+  "variables": [
+    {
+      "name": "nombre",
+      "selector": "name=\"Ingresa tu nombre\"",
+      "default_value": "Felipe"
+    },
+    {
+      "name": "empresa",
+      "selector": "name=\"Ingresa tu empresa\"",
+      "default_value": "Haka"
+    }
+  ],
+  "data_sets": [
+    {
+      "nombre": "Juan",
+      "empresa": "MAC"
+    }
+  ]
+}

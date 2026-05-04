@@ -2,7 +2,7 @@
   {
     "script": "script_test60_20260427_215225.py",
     "status": "PASS",
-    "duration": 4.3,
+    "duration": 4.0,
     "error": "",
     "steps": [
       {
@@ -60,7 +60,7 @@
   {
     "script": "Prueba_hakalab_2.py",
     "status": "PASS",
-    "duration": 4.8,
+    "duration": 3.5,
     "error": "",
     "steps": [
       {
@@ -97,7 +97,7 @@
   {
     "script": "Prueba_1111.py",
     "status": "PASS",
-    "duration": 4.2,
+    "duration": 2.6,
     "error": "",
     "steps": [
       {
@@ -143,6 +143,18 @@
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_1111/step_006.png"
       }
     ],
-    "outline_iterations": []
+    "outline_iterations": [
+      {
+        "iteration": 1,
+        "data_set": {
+          "nombre": "Juan",
+          "empresa": "MAC"
+        },
+        "status": "PASS",
+        "duration": 2.6,
+        "error": "",
+        "steps": []
+      }
+    ]
   }
 ]

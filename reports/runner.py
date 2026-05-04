@@ -450,8 +450,8 @@ for i, r in enumerate(results):
 
 CSS = """
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',Calibri,sans-serif;background:#12132A;color:#E8E8F0;padding:32px;font-size:15px;line-height:1.6}
-.main-header{background:#1E1F33;border-radius:12px;padding:24px 32px;margin-bottom:24px;border-left:5px solid #00D4FF}
+body{font-family:Calibri,sans-serif;background:#140323;color:#FFF;padding:24px;min-height:100vh;font-size:15px;line-height:1.6}
+.main-header{background:#1A2A4A;border-radius:12px;padding:24px 32px;margin-bottom:24px;border-left:5px solid #00D4FF}
 .suite-title{font-size:24px;font-weight:700;color:#00D4FF;margin-bottom:12px}
 .status-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:12px}
 .status-badge{padding:7px 22px;border-radius:22px;font-weight:700;font-size:16px;border:2px solid}
@@ -463,7 +463,7 @@ body{font-family:'Segoe UI',Calibri,sans-serif;background:#12132A;color:#E8E8F0;
 .progress-wrap{background:#2A2B3E;border-radius:6px;height:8px;overflow:hidden;margin-bottom:6px}
 .progress-bar{height:8px;border-radius:6px}
 .scripts-title{font-size:18px;font-weight:700;color:#00D4FF;margin-bottom:16px}
-.script-acc{background:#1E1F33;border-radius:10px;margin-bottom:12px;overflow:hidden}
+.script-acc{background:#1A2A4A;border-radius:10px;margin-bottom:12px;overflow:hidden}
 .script-head{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;transition:background .15s}
 .script-head:hover{background:#252640}
 .script-idx{background:#252640;color:#8888AA;padding:2px 8px;border-radius:5px;font-size:13px;font-weight:700;min-width:30px;text-align:center;flex-shrink:0}
@@ -473,7 +473,7 @@ body{font-family:'Segoe UI',Calibri,sans-serif;background:#12132A;color:#E8E8F0;
 .script-arrow{color:#8888AA;font-size:12px;transition:transform .2s;display:inline-block;flex-shrink:0}
 .script-body{display:none;padding:0 18px 16px 18px;border-top:1px solid #2E2F45}
 .steps-wrap{margin-top:8px}
-.step-row{background:#252640;border-radius:8px;margin-bottom:6px;overflow:hidden}
+.step-row{background:#1A2A4A;border-radius:8px;margin-bottom:6px;overflow:hidden}
 .step-row.step-fail{background:#2D1A1A}
 .step-head{display:flex;align-items:center;gap:12px;padding:10px 14px;transition:background .15s}
 .step-head:hover{background:rgba(255,255,255,.04);border-radius:8px}
