@@ -2,7 +2,7 @@
   {
     "script": "script_test60_20260427_215225.py",
     "status": "PASS",
-    "duration": 6.9,
+    "duration": 4.7,
     "error": "",
     "steps": [
       {
@@ -60,7 +60,7 @@
   {
     "script": "Prueba_hakalab_2.py",
     "status": "PASS",
-    "duration": 2.9,
+    "duration": 4.4,
     "error": "",
     "steps": [
       {
@@ -97,7 +97,7 @@
   {
     "script": "Prueba_1111.py",
     "status": "PASS",
-    "duration": 5.8,
+    "duration": 5.9,
     "error": "",
     "steps": [
       {
@@ -151,7 +151,7 @@
           "empresa": "Haka"
         },
         "status": "PASS",
-        "duration": 3.3,
+        "duration": 3.4,
         "error": "",
         "steps": [
           {
