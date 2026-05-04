@@ -2,7 +2,7 @@
   {
     "script": "script_test60_20260427_215225.py",
     "status": "PASS",
-    "duration": 4.0,
+    "duration": 6.9,
     "error": "",
     "steps": [
       {
@@ -60,7 +60,7 @@
   {
     "script": "Prueba_hakalab_2.py",
     "status": "PASS",
-    "duration": 3.5,
+    "duration": 2.9,
     "error": "",
     "steps": [
       {
@@ -97,7 +97,7 @@
   {
     "script": "Prueba_1111.py",
     "status": "PASS",
-    "duration": 2.6,
+    "duration": 5.8,
     "error": "",
     "steps": [
       {
@@ -147,11 +147,65 @@
       {
         "iteration": 1,
         "data_set": {
+          "nombre": "Felipe",
+          "empresa": "Haka"
+        },
+        "status": "PASS",
+        "duration": 3.3,
+        "error": "",
+        "steps": [
+          {
+            "num": 1,
+            "action": "goto: https://hakalab.com/",
+            "success": true,
+            "error": "",
+            "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_1111/step_001.png"
+          },
+          {
+            "num": 2,
+            "action": "click [button: Contacto]",
+            "success": true,
+            "error": "",
+            "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_1111/step_002.png"
+          },
+          {
+            "num": 3,
+            "action": "click [textbox: Ingresa tu nombre]",
+            "success": true,
+            "error": "",
+            "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_1111/step_003.png"
+          },
+          {
+            "num": 4,
+            "action": "fill: Felipe [textbox: Ingresa tu nombre]",
+            "success": true,
+            "error": "",
+            "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_1111/step_004.png"
+          },
+          {
+            "num": 5,
+            "action": "click [textbox: Ingresa tu empresa]",
+            "success": true,
+            "error": "",
+            "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_1111/step_005.png"
+          },
+          {
+            "num": 6,
+            "action": "fill: Haka [textbox: Ingresa tu empresa]",
+            "success": true,
+            "error": "",
+            "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_1111/step_006.png"
+          }
+        ]
+      },
+      {
+        "iteration": 2,
+        "data_set": {
           "nombre": "Juan",
           "empresa": "MAC"
         },
         "status": "PASS",
-        "duration": 2.6,
+        "duration": 2.5,
         "error": "",
         "steps": []
       }
