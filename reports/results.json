@@ -2,7 +2,7 @@
   {
     "script": "script_test60_20260427_215225.py",
     "status": "PASS",
-    "duration": 6.1,
+    "duration": 3.9,
     "error": "",
     "steps": [
       {
@@ -58,46 +58,9 @@
     "outline_iterations": []
   },
   {
-    "script": "Prueba_hakalab_2.py",
-    "status": "PASS",
-    "duration": 2.8,
-    "error": "",
-    "steps": [
-      {
-        "num": 1,
-        "action": "goto: https://hakalab.com/",
-        "success": true,
-        "error": "",
-        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_hakalab_2/step_001.png"
-      },
-      {
-        "num": 2,
-        "action": "click [link: Productos]",
-        "success": true,
-        "error": "",
-        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_hakalab_2/step_002.png"
-      },
-      {
-        "num": 3,
-        "action": "click [img: Hakabuddy]",
-        "success": true,
-        "error": "",
-        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_hakalab_2/step_003.png"
-      },
-      {
-        "num": 4,
-        "action": "click [#productos-button-hakabuddy]",
-        "success": true,
-        "error": "",
-        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_hakalab_2/step_004.png"
-      }
-    ],
-    "outline_iterations": []
-  },
-  {
     "script": "Prueba_1111.py",
     "status": "PASS",
-    "duration": 6.4,
+    "duration": 7.2,
     "error": "",
     "steps": [
       {
@@ -151,7 +114,7 @@
           "empresa": "Haka"
         },
         "status": "PASS",
-        "duration": 3.2,
+        "duration": 3.5,
         "error": "",
         "steps": [
           {
@@ -205,7 +168,7 @@
           "empresa": "MAC"
         },
         "status": "PASS",
-        "duration": 3.2,
+        "duration": 3.7,
         "error": "",
         "steps": [
           {
@@ -249,6 +212,173 @@
             "success": true,
             "error": "",
             "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_1111_iter2/step_006.png"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "script": "Prueba_hakalab_2.py",
+    "status": "PASS",
+    "duration": 4.3,
+    "error": "",
+    "steps": [
+      {
+        "num": 1,
+        "action": "goto: https://hakalab.com/",
+        "success": true,
+        "error": "",
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_hakalab_2/step_001.png"
+      },
+      {
+        "num": 2,
+        "action": "click [link: Productos]",
+        "success": true,
+        "error": "",
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_hakalab_2/step_002.png"
+      },
+      {
+        "num": 3,
+        "action": "click [img: Hakabuddy]",
+        "success": true,
+        "error": "",
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_hakalab_2/step_003.png"
+      },
+      {
+        "num": 4,
+        "action": "click [#productos-button-hakabuddy]",
+        "success": true,
+        "error": "",
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Prueba_hakalab_2/step_004.png"
+      }
+    ],
+    "outline_iterations": []
+  },
+  {
+    "script": "prueba_4.py",
+    "status": "PASS",
+    "duration": 2.8,
+    "error": "",
+    "steps": [
+      {
+        "num": 1,
+        "action": "goto: https://hakatools.hakalab.com/hakatools",
+        "success": true,
+        "error": "",
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/prueba_4/step_001.png"
+      },
+      {
+        "num": 2,
+        "action": "click [Formularios]",
+        "success": true,
+        "error": "",
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/prueba_4/step_002.png"
+      },
+      {
+        "num": 3,
+        "action": "fill: Felipe [textbox: Nombre de usuario]",
+        "success": true,
+        "error": "",
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/prueba_4/step_003.png"
+      },
+      {
+        "num": 4,
+        "action": "fill: felipe@gmail.com [textbox: Correo]",
+        "success": true,
+        "error": "",
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/prueba_4/step_004.png"
+      }
+    ],
+    "outline_iterations": []
+  },
+  {
+    "script": "prueba_3.py",
+    "status": "PASS",
+    "duration": 4.9,
+    "error": "",
+    "steps": [
+      {
+        "num": 1,
+        "action": "goto: https://hakalab.com/",
+        "success": true,
+        "error": "",
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/prueba_3/step_001.png"
+      },
+      {
+        "num": 2,
+        "action": "click [link: Servicios]",
+        "success": true,
+        "error": "",
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/prueba_3/step_002.png"
+      },
+      {
+        "num": 3,
+        "action": "click [link: Nosotros]",
+        "success": true,
+        "error": "",
+        "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/prueba_3/step_003.png"
+      }
+    ],
+    "outline_iterations": [
+      {
+        "iteration": 1,
+        "data_set": {},
+        "status": "PASS",
+        "duration": 2.4,
+        "error": "",
+        "steps": [
+          {
+            "num": 1,
+            "action": "goto: https://hakalab.com/",
+            "success": true,
+            "error": "",
+            "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/prueba_3/step_001.png"
+          },
+          {
+            "num": 2,
+            "action": "click [link: Servicios]",
+            "success": true,
+            "error": "",
+            "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/prueba_3/step_002.png"
+          },
+          {
+            "num": 3,
+            "action": "click [link: Nosotros]",
+            "success": true,
+            "error": "",
+            "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/prueba_3/step_003.png"
+          }
+        ]
+      },
+      {
+        "iteration": 2,
+        "data_set": {
+          "Nosotros": "Casos de \u00e9xito"
+        },
+        "status": "PASS",
+        "duration": 2.5,
+        "error": "",
+        "steps": [
+          {
+            "num": 1,
+            "action": "goto: https://hakalab.com/",
+            "success": true,
+            "error": "",
+            "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/prueba_3_iter2/step_001.png"
+          },
+          {
+            "num": 2,
+            "action": "click [link: Servicios]",
+            "success": true,
+            "error": "",
+            "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/prueba_3_iter2/step_002.png"
+          },
+          {
+            "num": 3,
+            "action": "click [link: Casos de \u00e9xito]",
+            "success": true,
+            "error": "",
+            "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/prueba_3_iter2/step_003.png"
           }
         ]
       }

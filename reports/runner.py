@@ -8,10 +8,12 @@ from datetime import datetime
 
 SCRIPTS = [
     "script_test60_20260427_215225.py",
+    "Prueba_1111.py",
     "Prueba_hakalab_2.py",
-    "Prueba_1111.py"
+    "prueba_4.py",
+    "prueba_3.py"
 ]
-SUITE_NAME = "Suit web haka"
+SUITE_NAME = "Regresion 2 Mauri"
 
 IS_CI = os.environ.get("CI", "") == "true" or not os.environ.get("DISPLAY", "")
 
@@ -107,6 +109,20 @@ def _substitute_fills(source, variables, data_set):
                     )
     return '\n'.join(lines)
 
+def _substitute_manual_columns(source, original_values, data_set, manual_columns):
+    """Replace arbitrary string literals for manual columns."""
+    result = source
+    for col_name in manual_columns:
+        original = original_values.get(col_name, "")
+        new_value = data_set.get(col_name, original)
+        if not original or new_value == original:
+            continue
+        old_escaped = re.escape(original)
+        result = re.sub(r'"' + old_escaped + r'"', '"' + new_value.replace('"', '\\"') + '"', result, count=1)
+        if original in result:
+            result = re.sub(r"'" + old_escaped + r"'", "'" + new_value.replace("'", "\\'") + "'", result, count=1)
+    return result
+
 # ── Ejecutar scripts ──────────────────────────────────────────────
 results = []
 base = Path(__file__).parent / "scripts"
@@ -128,12 +144,16 @@ for name in SCRIPTS:
     outline_json_path = base / (name + ".outline.json")
     outline_data_sets = []
     outline_variables = []
+    outline_manual_columns = []
+    outline_original_values = {}
     if outline_json_path.exists():
         try:
             with open(outline_json_path, "r", encoding="utf-8") as _of:
                 _odata = json.load(_of)
             outline_data_sets = _odata.get("data_sets", [])
             outline_variables = _odata.get("variables", [])
+            outline_manual_columns = _odata.get("manual_columns", [])
+            outline_original_values = _odata.get("original_values", {})
             if outline_data_sets:
                 print(f"[OUTLINE] {name}: {len(outline_data_sets)} data set(s) found")
         except Exception as e:
@@ -283,6 +303,9 @@ for name in SCRIPTS:
 
     # If outline data exists, re-execute for remaining data sets
     if outline_data_sets and len(outline_data_sets) > 0:
+        # Filtrar data_sets vacíos
+        outline_data_sets = [ds for ds in outline_data_sets if any(v.strip() for v in ds.values())]
+
         all_iterations = []
 
         # Iteración 0: la ejecución original (ya ejecutada arriba)
@@ -304,6 +327,9 @@ for name in SCRIPTS:
             print(f"[OUTLINE] {name} — Iteración {ds_idx+1}/{len(outline_data_sets)}: {ds_label}")
 
             modified_source = _substitute_fills(source, outline_variables, ds)
+            # También sustituir columnas manuales
+            if outline_manual_columns:
+                modified_source = _substitute_manual_columns(modified_source, outline_original_values, ds, outline_manual_columns)
             if IS_CI:
                 modified_source = patch_headless(modified_source)
 
