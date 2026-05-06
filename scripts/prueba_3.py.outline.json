@@ -1,0 +1,14 @@
+{
+  "variables": [],
+  "data_sets": [
+    {
+      "Nosotros": "Casos de éxito"
+    }
+  ],
+  "manual_columns": [
+    "Nosotros"
+  ],
+  "original_values": {
+    "Nosotros": "Nosotros"
+  }
+}
