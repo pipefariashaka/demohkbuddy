@@ -1,6 +1,6 @@
-"""
-HakaBuddy — Runner de pruebas Playwright
-Generado automáticamente. No editar manualmente.
+﻿"""
+HakaBuddy â€” Runner de pruebas Playwright
+Generado automÃ¡ticamente. No editar manualmente.
 """
 import subprocess, sys, os, json, re, tempfile, time, base64
 from pathlib import Path
@@ -15,7 +15,7 @@ SUITE_NAME = "Suit web haka"
 IS_CI = os.environ.get("CI", "") == "true" or not os.environ.get("DISPLAY", "")
 
 def patch_headless(source):
-    # 1. Quitar channel="chrome" / channel='chrome' — en CI solo hay Chromium
+    # 1. Quitar channel="chrome" / channel='chrome' â€” en CI solo hay Chromium
     source = re.sub(r',?\s*channel\s*=\s*["\']chrome["\']', "", source)
     source = re.sub(r'channel\s*=\s*["\']chrome["\'],?\s*', "", source)
 
@@ -56,14 +56,14 @@ def patch_headless(source):
         return call
     source = re.sub(r'\.new_context\([^)]*\)', _inject_viewport, source)
 
-    # 5. Después de new_page(): timeout 90s + wait_for_load_state
+    # 5. DespuÃ©s de new_page(): timeout 90s + wait_for_load_state
     source = re.sub(
         r'(\bpage\s*=\s*(?:context|browser)\.new_page\(\))',
         r'\1\n    page.set_default_timeout(90000)',
         source
     )
 
-    # 6. Después de cada goto(): esperar que la red esté idle
+    # 6. DespuÃ©s de cada goto(): esperar que la red estÃ© idle
     source = re.sub(
         r'(page\.goto\([^)]+\))',
         r'\1\n    page.wait_for_load_state("networkidle")\n    page.screenshot(path="ci_debug_goto.png")',
@@ -78,6 +78,30 @@ def _esc(t):
 def _dur(s):
     s = int(float(s))
     return f"{s//60}m {s%60}s" if s >= 60 else f"{s}s"
+
+def _format_step_action(action):
+    """Formatea la acciÃ³n de un paso a lenguaje legible en espaÃ±ol."""
+    replacements = [
+        ("fill",          "Completo el campo con"),
+        ("goto",          "Voy a"),
+        ("click",         "Doy click en"),
+        ("check",         "Marco"),
+        ("uncheck",       "Desmarco"),
+        ("select_option", "Selecciono"),
+        ("hover",         "Paso el cursor sobre"),
+        ("press",         "Presiono"),
+        ("type",          "Escribo"),
+        ("wait_for",      "Espero"),
+        ("screenshot",    "Capturo pantalla"),
+        ("close",         "Cierro"),
+        ("navigate",      "Navego a"),
+    ]
+    result = action
+    for old, new in replacements:
+        if result.lower().startswith(old):
+            result = new + result[len(old):]
+            break
+    return result
 
 def _img_b64(path):
     try:
@@ -120,7 +144,7 @@ def _substitute_manual_columns(source, original_values, data_set, manual_columns
             result = re.sub(r"'" + old_escaped + r"'", "'" + new_value.replace("'", "\\'") + "'", result, count=1)
     return result
 
-# ── Ejecutar scripts ──────────────────────────────────────────────
+# â”€â”€ Ejecutar scripts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 results = []
 base = Path(__file__).parent / "scripts"
 
@@ -189,7 +213,7 @@ for name in SCRIPTS:
             except Exception:
                 pass
             
-            # Escribir el código instrumentado a un archivo temporal
+            # Escribir el cÃ³digo instrumentado a un archivo temporal
             with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False, encoding="utf-8") as tmp:
                 tmp.write(instrumented_code)
                 instrumented_path = tmp.name
@@ -212,15 +236,15 @@ for name in SCRIPTS:
                     raw_steps = json.load(f)
                 # El formato del JSON es {"screenshots": {num: path}}
                 screenshots_map = raw_steps.get("screenshots", {})
-                # Extraer steps del código original
+                # Extraer steps del cÃ³digo original
                 parsed_steps = sr._extract_steps_from_script(source)
                 for i, ps in enumerate(parsed_steps):
                     is_last = (i == len(parsed_steps) - 1)
-                    # Si el script falló, marcar el último step como fallido
+                    # Si el script fallÃ³, marcar el Ãºltimo step como fallido
                     step_success = r.returncode == 0 or not is_last
                     
-                    # Construir descripción legible del paso
-                    action_desc = ps.action
+                    # Construir descripciÃ³n legible del paso
+                    action_desc = _format_step_action(ps.action)
                     if ps.value:
                         action_desc += f": {ps.value}"
                     if ps.selector:
@@ -234,13 +258,13 @@ for name in SCRIPTS:
                         "screenshot_path": screenshots_map.get(str(ps.num), ""),
                     })
             else:
-                # Si no hay steps.json, extraer pasos del código sin screenshots
+                # Si no hay steps.json, extraer pasos del cÃ³digo sin screenshots
                 parsed_steps = sr._extract_steps_from_script(source)
                 for i, ps in enumerate(parsed_steps):
                     is_last = (i == len(parsed_steps) - 1)
                     step_success = r.returncode == 0 or not is_last
                     
-                    action_desc = ps.action
+                    action_desc = _format_step_action(ps.action)
                     if ps.value:
                         action_desc += f": {ps.value}"
                     if ps.selector:
@@ -254,7 +278,7 @@ for name in SCRIPTS:
                         "screenshot_path": "",
                     })
         except Exception as e:
-            print(f"[step_runner] Error: {e} — ejecutando sin instrumentación")
+            print(f"[step_runner] Error: {e} â€” ejecutando sin instrumentaciÃ³n")
             instrumented_path = None
             with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False, encoding="utf-8") as tmp:
                 tmp.write(source)
@@ -267,7 +291,7 @@ for name in SCRIPTS:
             except Exception:
                 pass
     else:
-        # Sin step_runner — ejecución simple
+        # Sin step_runner â€” ejecuciÃ³n simple
         with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False, encoding="utf-8") as tmp:
             tmp.write(source)
             run_path = tmp.name
@@ -300,12 +324,12 @@ for name in SCRIPTS:
 
     # If outline data exists, re-execute for remaining data sets
     if outline_data_sets and len(outline_data_sets) > 0:
-        # Filtrar data_sets vacíos
+        # Filtrar data_sets vacÃ­os
         outline_data_sets = [ds for ds in outline_data_sets if any(v.strip() for v in ds.values())]
 
         all_iterations = []
 
-        # Iteración 0: la ejecución original (ya ejecutada arriba)
+        # IteraciÃ³n 0: la ejecuciÃ³n original (ya ejecutada arriba)
         original_ds = {}
         for v in outline_variables:
             original_ds[v.get("name", "")] = v.get("default_value", "")
@@ -321,10 +345,10 @@ for name in SCRIPTS:
         # Iteraciones adicionales con data sets
         for ds_idx, ds in enumerate(outline_data_sets):
             ds_label = ", ".join(f"{k}={v}" for k, v in ds.items())
-            print(f"[OUTLINE] {name} — Iteración {ds_idx+1}/{len(outline_data_sets)}: {ds_label}")
+            print(f"[OUTLINE] {name} â€” IteraciÃ³n {ds_idx+1}/{len(outline_data_sets)}: {ds_label}")
 
             modified_source = _substitute_fills(source, outline_variables, ds)
-            # También sustituir columnas manuales
+            # TambiÃ©n sustituir columnas manuales
             if outline_manual_columns:
                 modified_source = _substitute_manual_columns(modified_source, outline_original_values, ds, outline_manual_columns)
             if IS_CI:
@@ -378,7 +402,7 @@ for name in SCRIPTS:
                         for si, ps in enumerate(parsed_iter_steps):
                             is_last = (si == len(parsed_iter_steps) - 1)
                             step_success = r_iter.returncode == 0 or not is_last
-                            action_desc = ps.action
+                            action_desc = _format_step_action(ps.action)
                             if ps.value:
                                 action_desc += f": {ps.value}"
                             if ps.selector:
@@ -395,7 +419,7 @@ for name in SCRIPTS:
                         for si, ps in enumerate(parsed_iter_steps):
                             is_last = (si == len(parsed_iter_steps) - 1)
                             step_success = r_iter.returncode == 0 or not is_last
-                            action_desc = ps.action
+                            action_desc = _format_step_action(ps.action)
                             if ps.value:
                                 action_desc += f": {ps.value}"
                             if ps.selector:
@@ -408,7 +432,7 @@ for name in SCRIPTS:
                                 "screenshot_path": "",
                             })
                 except Exception as e:
-                    print(f"[OUTLINE] step_runner error iter {ds_idx+1}: {e} — ejecutando sin instrumentación")
+                    print(f"[OUTLINE] step_runner error iter {ds_idx+1}: {e} â€” ejecutando sin instrumentaciÃ³n")
                     with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False, encoding="utf-8") as tmp:
                         tmp.write(modified_source)
                         iter_path = tmp.name
@@ -439,7 +463,7 @@ for name in SCRIPTS:
                 relevant_iter = [l for l in stderr_lines_iter if any(x in l for x in ["Error", "Timeout", "assert"])]
                 iter_error = "\n".join(relevant_iter[-3:]) if relevant_iter else r_iter.stderr[-300:]
 
-            print(f"[OUTLINE] [{iter_status}] Iteración {ds_idx+1} ({dur_iter}s)")
+            print(f"[OUTLINE] [{iter_status}] IteraciÃ³n {ds_idx+1} ({dur_iter}s)")
 
             all_iterations.append({
                 "iteration": ds_idx + 2,
@@ -460,7 +484,7 @@ for name in SCRIPTS:
             results[-1]["error"] = f"{iter_failed} de {len(all_iterations)} iteraciones fallaron"
         print(f"[OUTLINE] {name}: {iter_passed} PASS / {iter_failed} FAIL")
 
-# ── Resumen consola ───────────────────────────────────────────────
+# â”€â”€ Resumen consola â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 passed  = sum(1 for r in results if r["status"] == "PASS")
 failed  = sum(1 for r in results if r["status"] == "FAIL")
 skipped = sum(1 for r in results if r["status"] == "SKIP")
@@ -469,7 +493,7 @@ print(f"\n=== {passed} PASS / {failed} FAIL / {skipped} SKIP / {len(results)} to
 with open("results.json", "w") as f:
     json.dump(results, f, indent=2)
 
-# ── Generar reporte HTML (mismo formato que reporte local) ────────
+# â”€â”€ Generar reporte HTML (mismo formato que reporte local) â”€â”€â”€â”€â”€â”€â”€â”€
 all_ok     = failed == 0
 ok_color   = "#28A745" if all_ok else "#DC3545"
 icon       = "\u2713" if all_ok else "\u2717"
@@ -500,7 +524,7 @@ for i, r in enumerate(results):
     for step in r.get("steps", []):
         num   = step.get("num", "")
         s_ok2 = step.get("success", True)
-        desc  = step.get("action", "")
+        desc  = _format_step_action(step.get("action", ""))
         err   = step.get("error", "")
         ss    = step.get("screenshot_path", "")
         sc2   = "#28A745" if s_ok2 else "#DC3545"
@@ -546,7 +570,7 @@ for i, r in enumerate(results):
             if it.get("error"):
                 it_err = '<div class="paso-err">' + _esc(it["error"]) + '</div>'
 
-            # Pasos de esta iteración
+            # Pasos de esta iteraciÃ³n
             it_steps_html = ""
             for st in it.get("steps", []):
                 st_num = st.get("num", "")
@@ -592,7 +616,7 @@ for i, r in enumerate(results):
             )
         outline_iters_html += '</div>'
 
-    # Build script body — hide top-level steps for outline scripts
+    # Build script body â€” hide top-level steps for outline scripts
     top_steps = '' if hide_top_steps else '<div style="margin-top:8px">' + pasos_html + '</div>'
 
     # Outline stats
@@ -693,22 +717,54 @@ def _info(label, value):
         return ""
     return '<div class="info-item"><span class="info-label">' + label + '</span><br><span class="info-value">' + _esc(str(value)) + '</span></div>'
 
+# Logos y banner (desde config local si existe)
+_logo_left_html = ""
+_logo_right_html = ""
+_banner_html = ""
+try:
+    from config import get_config_value as _gcv
+    def _img_b64_cfg(path):
+        if not path or not os.path.exists(path):
+            return ""
+        try:
+            import base64
+            with open(path, "rb") as _f:
+                _data = base64.b64encode(_f.read()).decode()
+            _ext = os.path.splitext(path)[1].lower().replace(".", "")
+            _mime = {"png":"image/png","jpg":"image/jpeg","jpeg":"image/jpeg"}.get(_ext,"image/png")
+            return f"data:{_mime};base64,{_data}"
+        except Exception:
+            return ""
+    _ll = _img_b64_cfg(_gcv("report_logo_left", ""))
+    _lr = _img_b64_cfg(_gcv("report_logo_right", ""))
+    _lb = _img_b64_cfg(_gcv("report_banner", ""))
+    if _ll: _logo_left_html  = f'<img src="{_ll}" style="height:44px;object-fit:contain;">'
+    if _lr: _logo_right_html = f'<img src="{_lr}" style="height:44px;object-fit:contain;">'
+    if _lb: _banner_html     = f'<div style="text-align:center;padding:0 0 10px 0;"><img src="{_lb}" style="max-width:100%;max-height:120px;object-fit:contain;display:block;margin:0 auto;"></div>'
+except Exception:
+    pass
+
 html = (
     '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">'
     '<title>' + _esc(SUITE_NAME) + ' &mdash; HakaBuddy CI</title>'
     '<style>' + CSS + '</style></head><body>'
     '<div class="wrap">'
 
-    # ── HEADER card ──
+    # â”€â”€ HEADER card â”€â”€
     '<div class="card" style="border-left:4px solid #00D4FF">'
-    '<div style="font-size:22px;font-weight:bold;color:#00D4FF;text-align:center;margin-bottom:10px">Reporte de prueba automatizada</div>'
+    + _banner_html +
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'
+    '<div style="min-width:80px">' + _logo_left_html + '</div>'
+    '<div style="font-size:22px;font-weight:bold;color:#00D4FF;text-align:center;flex:1">Reporte de prueba automatizada</div>'
+    '<div style="min-width:80px;text-align:right">' + _logo_right_html + '</div>'
+    '</div>'
     '<div style="display:flex;flex-wrap:wrap;padding-top:10px;border-top:1px solid #2A4A6A">'
     + _info("Fecha", fecha)
     + _info("Duraci\u00f3n", _dur(total_dur))
     + _info("Scripts", str(len(results)))
     + '</div></div>'
 
-    # ── RESULTADO card ──
+    # â”€â”€ RESULTADO card â”€â”€
     '<div class="card" style="border-left:4px solid ' + ok_color + '">'
     '<div class="section-title" style="color:' + ok_color + '">Resultado</div>'
     '<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:10px">'
@@ -718,7 +774,7 @@ html = (
     + progress_html +
     '</div>'
 
-    # ── SCRIPTS ──
+    # â”€â”€ SCRIPTS â”€â”€
     '<div class="section-title">\U0001f4cb Scripts ejecutados</div>'
     + scripts_html +
 
@@ -732,3 +788,4 @@ Path("report.html").write_text(html, encoding="utf-8")
 print("\n[OK] Reporte HTML generado: report.html")
 
 sys.exit(0 if failed == 0 else 1)
+
