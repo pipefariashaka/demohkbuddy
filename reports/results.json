@@ -2,82 +2,82 @@
   {
     "script": "Validacion_formulario_completo.py",
     "status": "PASS",
-    "duration": 4.9,
+    "duration": 4.8,
     "error": "",
     "steps": [
       {
         "num": 1,
-        "action": "goto: https://hakatools.hakalab.com/hakatools",
+        "action": "Voy a: https://hakatools.hakalab.com/hakatools",
         "success": true,
         "error": "",
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Validacion_formulario_completo/step_001.png"
       },
       {
         "num": 2,
-        "action": "click [Interacciones]",
+        "action": "Doy click en [Interacciones]",
         "success": true,
         "error": "",
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Validacion_formulario_completo/step_002.png"
       },
       {
         "num": 3,
-        "action": "click [tab: Lista seleccionable]",
+        "action": "Doy click en [tab: Lista seleccionable]",
         "success": true,
         "error": "",
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Validacion_formulario_completo/step_003.png"
       },
       {
         "num": 4,
-        "action": "click [Lista seleccionable]",
+        "action": "Doy click en [Lista seleccionable]",
         "success": true,
         "error": "",
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Validacion_formulario_completo/step_004.png"
       },
       {
         "num": 5,
-        "action": "click [button: No seleccionar ninguno]",
+        "action": "Doy click en [button: No seleccionar ninguno]",
         "success": true,
         "error": "",
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Validacion_formulario_completo/step_005.png"
       },
       {
         "num": 6,
-        "action": "click [tab: Arrastrar y soltar]",
+        "action": "Doy click en [tab: Arrastrar y soltar]",
         "success": true,
         "error": "",
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Validacion_formulario_completo/step_006.png"
       },
       {
         "num": 7,
-        "action": "click [tab: Tabla din\u00e1mica]",
+        "action": "Doy click en [tab: Tabla din\u00e1mica]",
         "success": true,
         "error": "",
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Validacion_formulario_completo/step_007.png"
       },
       {
         "num": 8,
-        "action": "click [button: Editar]",
+        "action": "Doy click en [button: Editar]",
         "success": true,
         "error": "",
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Validacion_formulario_completo/step_008.png"
       },
       {
         "num": 9,
-        "action": "click [#inputNameInModal]",
+        "action": "Doy click en [#inputNameInModal]",
         "success": true,
         "error": "",
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Validacion_formulario_completo/step_009.png"
       },
       {
         "num": 10,
-        "action": "fill: Diego Maradona [#inputNameInModal]",
+        "action": "Completo el campo con: Diego Maradona [#inputNameInModal]",
         "success": true,
         "error": "",
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Validacion_formulario_completo/step_010.png"
       },
       {
         "num": 11,
-        "action": "click [button: Agregar]",
+        "action": "Doy click en [button: Agregar]",
         "success": true,
         "error": "",
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Validacion_formulario_completo/step_011.png"
@@ -88,54 +88,54 @@
   {
     "script": "Validacion_formulario_b\u00e1sico.py",
     "status": "PASS",
-    "duration": 3.1,
+    "duration": 3.0,
     "error": "",
     "steps": [
       {
         "num": 1,
-        "action": "goto: https://hakatools.hakalab.com/hakatools",
+        "action": "Voy a: https://hakatools.hakalab.com/hakatools",
         "success": true,
         "error": "",
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Validacion_formulario_b\u00e1sico/step_001.png"
       },
       {
         "num": 2,
-        "action": "click [Formularios]",
+        "action": "Doy click en [Formularios]",
         "success": true,
         "error": "",
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Validacion_formulario_b\u00e1sico/step_002.png"
       },
       {
         "num": 3,
-        "action": "fill: Felipe [textbox: Nombre de usuario]",
+        "action": "Completo el campo con: Felipe [textbox: Nombre de usuario]",
         "success": true,
         "error": "",
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Validacion_formulario_b\u00e1sico/step_003.png"
       },
       {
         "num": 4,
-        "action": "fill: farias3felipe@gmail.com [textbox: Correo]",
+        "action": "Completo el campo con: farias3felipe@gmail.com [textbox: Correo]",
         "success": true,
         "error": "",
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Validacion_formulario_b\u00e1sico/step_004.png"
       },
       {
         "num": 5,
-        "action": "fill: mi casita [textbox: Direcci\u00f3n]",
+        "action": "Completo el campo con: mi casita [textbox: Direcci\u00f3n]",
         "success": true,
         "error": "",
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Validacion_formulario_b\u00e1sico/step_005.png"
       },
       {
         "num": 6,
-        "action": "fill: mi casita 2 [textbox: Direcci\u00f3n permanente]",
+        "action": "Completo el campo con: mi casita 2 [textbox: Direcci\u00f3n permanente]",
         "success": true,
         "error": "",
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Validacion_formulario_b\u00e1sico/step_006.png"
       },
       {
         "num": 7,
-        "action": "click [button: Enviar]",
+        "action": "Doy click en [button: Enviar]",
         "success": true,
         "error": "",
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Validacion_formulario_b\u00e1sico/step_007.png"
