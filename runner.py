@@ -7,13 +7,10 @@ from pathlib import Path
 from datetime import datetime
 
 SCRIPTS = [
-    "script_test60_20260427_215225.py",
-    "Prueba_1111.py",
-    "Prueba_hakalab_2.py",
-    "prueba_4.py",
-    "prueba_3.py"
+    "Validacion_formulario_completo.py",
+    "Validacion_formulario_b\u00e1sico.py"
 ]
-SUITE_NAME = "Regresion 2 Mauri"
+SUITE_NAME = "Suit web haka"
 
 IS_CI = os.environ.get("CI", "") == "true" or not os.environ.get("DISPLAY", "")
 
