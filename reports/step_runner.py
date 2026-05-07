@@ -275,9 +275,14 @@ def execute_with_steps(script_path, script_name="Script", script_id=None,
 
     start = time.time()
     try:
-        proc = subprocess.run(
-            [sys.executable, instrumented_path],
-            capture_output=True, text=True, timeout=300)
+        if getattr(sys, 'frozen', False):
+            # App empaquetada: ejecutar in-process (sys.executable = app binary)
+            from playwright_module.playback import _run_script_inprocess
+            proc = _run_script_inprocess(instrumented_path, timeout=300.0)
+        else:
+            proc = subprocess.run(
+                [sys.executable, instrumented_path],
+                capture_output=True, text=True, timeout=300)
         result.duration_seconds = time.time() - start
         result.success = proc.returncode == 0
         if not result.success:
