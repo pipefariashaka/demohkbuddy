@@ -7,10 +7,10 @@ from pathlib import Path
 from datetime import datetime
 
 SCRIPTS = [
-    "Validacion_formulario_completo.py",
-    "Validacion_formulario_b\u00e1sico.py"
+    "Prueba_hakatools_formualrio_basico.py",
+    "Prueba_de_elementos_en_hakatooks.py"
 ]
-SUITE_NAME = "Suit web haka"
+SUITE_NAME = "Suit regresion haka"
 
 IS_CI = os.environ.get("CI", "") == "true" or not os.environ.get("DISPLAY", "")
 
