@@ -7,6 +7,7 @@ from pathlib import Path
 from datetime import datetime
 
 SCRIPTS = [
+    "Ejemplo_Salesforce.py",
     "Validacion_formulario_completo.py",
     "Validacion_formulario_b\u00e1sico.py"
 ]
