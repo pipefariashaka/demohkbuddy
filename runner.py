@@ -44,16 +44,22 @@ def patch_headless(source):
         if "viewport" in call and "user_agent" in call:
             return call
         call = call.rstrip()
-        if "viewport" not in call and "user_agent" not in call:
-            if call.endswith(")"):
-                return call[:-1] + f", viewport={{'width':1280,'height':720}}, {ua})"
-        elif "viewport" in call and "user_agent" not in call:
-            if call.endswith(")"):
-                return call[:-1] + f", {ua})"
-        elif "user_agent" not in call:
-            if call.endswith(")"):
-                return call[:-1] + f", {ua})"
-        return call
+        # Extraer contenido dentro de los paréntesis
+        inner_start = call.index("(") + 1
+        inner = call[inner_start:-1].strip() if call.endswith(")") else ""
+        # Construir los nuevos kwargs a inyectar
+        new_kwargs = []
+        if "viewport" not in call:
+            new_kwargs.append("viewport={'width':1280,'height':720}")
+        if "user_agent" not in call:
+            new_kwargs.append(ua)
+        if not new_kwargs:
+            return call
+        inject = ", ".join(new_kwargs)
+        if inner:
+            return call[:inner_start] + inner + ", " + inject + ")"
+        else:
+            return call[:inner_start] + inject + ")"
     source = re.sub(r'\.new_context\([^)]*\)', _inject_viewport, source)
 
     # 5. DespuÃ©s de new_page(): timeout 90s + wait_for_load_state
