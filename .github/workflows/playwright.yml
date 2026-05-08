@@ -39,6 +39,8 @@ jobs:
           playwright install chromium --with-deps
 
       - name: Run tests
+        env:
+          HAKA_AUTH_KEY: ${{ secrets.HAKA_AUTH_KEY }}
         run: python runner.py
 
       - name: Upload artifacts
