@@ -1,0 +1,32 @@
+{
+  "variables": [
+    {
+      "name": "Juani",
+      "selector": "",
+      "default_value": "Juani"
+    },
+    {
+      "name": "juani@hakalab.com",
+      "selector": "",
+      "default_value": "juani@hakalab.com"
+    },
+    {
+      "name": "mi casita",
+      "selector": "",
+      "default_value": "mi casita"
+    }
+  ],
+  "data_sets": [
+    {
+      "Juani": "Willy",
+      "juani@hakalab.com": "willy@haka.com",
+      "mi casita": "su casica"
+    }
+  ],
+  "manual_columns": [],
+  "original_values": {
+    "Juani": "Juani",
+    "juani@hakalab.com": "juani@hakalab.com",
+    "mi casita": "mi casita"
+  }
+}

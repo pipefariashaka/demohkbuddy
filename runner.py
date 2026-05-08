@@ -8,7 +8,8 @@ from datetime import datetime
 
 SCRIPTS = [
     "Prueba_hakatools_formualrio_basico.py",
-    "Prueba_de_elementos_en_hakatooks.py"
+    "Prueba_de_elementos_en_hakatooks.py",
+    "Prueba_en_hakatools.py"
 ]
 SUITE_NAME = "Suit regresion haka"
 
