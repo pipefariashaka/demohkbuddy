@@ -231,6 +231,10 @@ def _build_instrumented_script(original_path: str, screenshots_dir: str,
         n = step_num[0]
         indent = len(line) - len(line.lstrip())
         sp = " " * indent
+
+        # Esperar a que la página esté lista antes de cada acción
+        instrumented.append(f"{sp}try:\n{sp}    page.wait_for_load_state('domcontentloaded', timeout=10000)\n{sp}except Exception: pass\n")
+
         ss_path = f"_os.path.join(_ss_dir, f'step_{n:03d}.png')"
         instrumented.append(
             f"{sp}try:\n"

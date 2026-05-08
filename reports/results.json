@@ -1,8 +1,87 @@
 [
   {
+    "script": "Ejemplo_Salesforce.py",
+    "status": "FAIL",
+    "duration": 2.0,
+    "error": "FileNotFoundError: [Errno 2] No such file or directory: 'c:\\\\Users\\\\felipefarias\\\\Desktop\\\\Hakalab\\\\Productos\\\\Hakabuddy 3.0\\\\prototype_python\\\\data\\\\auth_states\\\\salesforce_1778200179.json'",
+    "steps": [
+      {
+        "num": 1,
+        "action": "Voy a: https://ability-customization-9251.lightning.force.com/lightning/page/home",
+        "success": true,
+        "error": "",
+        "screenshot_path": ""
+      },
+      {
+        "num": 2,
+        "action": "Doy click en [button: Cerrar]",
+        "success": true,
+        "error": "",
+        "screenshot_path": ""
+      },
+      {
+        "num": 3,
+        "action": "Doy click en [link: Cuentas]",
+        "success": true,
+        "error": "",
+        "screenshot_path": ""
+      },
+      {
+        "num": 4,
+        "action": "Doy click en [button: Nuevo]",
+        "success": true,
+        "error": "",
+        "screenshot_path": ""
+      },
+      {
+        "num": 5,
+        "action": "Doy click en [textbox: Nombre de la cuenta]",
+        "success": true,
+        "error": "",
+        "screenshot_path": ""
+      },
+      {
+        "num": 6,
+        "action": "Completo el campo con: Haka lab [textbox: Nombre de la cuenta]",
+        "success": true,
+        "error": "",
+        "screenshot_path": ""
+      },
+      {
+        "num": 7,
+        "action": "Doy click en [textbox: Sitio Web]",
+        "success": true,
+        "error": "",
+        "screenshot_path": ""
+      },
+      {
+        "num": 8,
+        "action": "Completo el campo con: www.hakalab.com [textbox: Sitio Web]",
+        "success": true,
+        "error": "",
+        "screenshot_path": ""
+      },
+      {
+        "num": 9,
+        "action": "Doy click en [combobox: Tipo]",
+        "success": true,
+        "error": "",
+        "screenshot_path": ""
+      },
+      {
+        "num": 10,
+        "action": "Doy click en [Integrador]",
+        "success": false,
+        "error": "Error en este paso",
+        "screenshot_path": ""
+      }
+    ],
+    "outline_iterations": []
+  },
+  {
     "script": "Validacion_formulario_completo.py",
     "status": "PASS",
-    "duration": 4.0,
+    "duration": 4.2,
     "error": "",
     "steps": [
       {
@@ -146,71 +225,6 @@
         "success": true,
         "error": "",
         "screenshot_path": "/home/runner/work/demohkbuddy/demohkbuddy/screenshots/Validacion_formulario_b\u00e1sico/step_008.png"
-      }
-    ],
-    "outline_iterations": []
-  },
-  {
-    "script": "prueba_sles.py",
-    "status": "FAIL",
-    "duration": 0.5,
-    "error": "FileNotFoundError: [Errno 2] No such file or directory: 'c:\\\\Users\\\\felipefarias\\\\Desktop\\\\Hakalab\\\\Productos\\\\Hakabuddy 3.0\\\\prototype_python\\\\data\\\\auth_states\\\\salesforce_1778200179.json'",
-    "steps": [
-      {
-        "num": 1,
-        "action": "Voy a: https://ability-customization-9251.lightning.force.com/lightning/page/home",
-        "success": true,
-        "error": "",
-        "screenshot_path": ""
-      },
-      {
-        "num": 2,
-        "action": "Doy click en [button: Cerrar]",
-        "success": true,
-        "error": "",
-        "screenshot_path": ""
-      },
-      {
-        "num": 3,
-        "action": "Doy click en [link: Cuentas]",
-        "success": true,
-        "error": "",
-        "screenshot_path": ""
-      },
-      {
-        "num": 4,
-        "action": "Doy click en [button: Nuevo]",
-        "success": true,
-        "error": "",
-        "screenshot_path": ""
-      },
-      {
-        "num": 5,
-        "action": "Doy click en [textbox: Nombre de la cuenta]",
-        "success": true,
-        "error": "",
-        "screenshot_path": ""
-      },
-      {
-        "num": 6,
-        "action": "Completo el campo con: hola [textbox: Nombre de la cuenta]",
-        "success": true,
-        "error": "",
-        "screenshot_path": ""
-      },
-      {
-        "num": 7,
-        "action": "Doy click en [combobox: Tipo]",
-        "success": true,
-        "error": "",
-        "screenshot_path": ""
-      },
-      {
-        "num": 8,
-        "action": "Doy click en [Competidor]",
-        "success": false,
-        "error": "Error en este paso",
-        "screenshot_path": ""
       }
     ],
     "outline_iterations": []
