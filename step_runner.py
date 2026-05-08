@@ -120,6 +120,9 @@ def _build_instrumented_script(original_path: str, screenshots_dir: str,
         ctx_kwargs["user_agent"] = f"'{cfg['user_agent']}'"
     if cfg.get("extra_headers"):
         ctx_kwargs["extra_http_headers"] = repr(cfg["extra_headers"])
+    # Storage state (sesión guardada) — reproduce ya autenticado
+    if cfg.get("load_storage") and os.path.exists(cfg["load_storage"]):
+        ctx_kwargs["storage_state"] = repr(cfg["load_storage"])
 
     # Kwargs para launch() — reemplazamos headless y agregamos slow_mo
     # slow_mo va en launch(), no en codegen

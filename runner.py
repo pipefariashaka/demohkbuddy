@@ -8,7 +8,8 @@ from datetime import datetime
 
 SCRIPTS = [
     "Validacion_formulario_completo.py",
-    "Validacion_formulario_b\u00e1sico.py"
+    "Validacion_formulario_b\u00e1sico.py",
+    "prueba_sles.py"
 ]
 SUITE_NAME = "Suit web haka"
 
@@ -148,6 +149,32 @@ def _substitute_manual_columns(source, original_values, data_set, manual_columns
 results = []
 base = Path(__file__).parent / "scripts"
 
+# Descifrar sesiones guardadas (.auth.enc) si HAKA_AUTH_KEY está configurado
+def _decrypt_auth(enc_path):
+    """Descifra un archivo .auth.enc usando HAKA_AUTH_KEY del entorno."""
+    import hashlib
+    key = os.environ.get("HAKA_AUTH_KEY", "")
+    if not key:
+        return None
+    try:
+        with open(enc_path, "rb") as f:
+            data = f.read()
+        if not data.startswith(b"HKENC1"):
+            return None
+        data = data[6:]
+        aes_key = hashlib.sha256(key.encode()).digest()
+        decrypted = bytearray(len(data))
+        for i, b in enumerate(data):
+            decrypted[i] = b ^ aes_key[i % 32]
+        out_path = enc_path.replace(".auth.enc", ".auth.json")
+        with open(out_path, "wb") as f:
+            f.write(bytes(decrypted))
+        print(f"[AUTH] Sesion descifrada: {out_path}")
+        return out_path
+    except Exception as e:
+        print(f"[AUTH] Error descifrando {enc_path}: {e}")
+        return None
+
 for name in SCRIPTS:
     path = base / name
     if not path.exists():
@@ -160,6 +187,23 @@ for name in SCRIPTS:
     source = path.read_text(encoding="utf-8")
     if IS_CI:
         source = patch_headless(source)
+
+    # Cargar sesión cifrada si existe
+    _auth_storage_path = None
+    _auth_enc_file = base / (name + ".auth.enc")
+    if _auth_enc_file.exists():
+        _auth_storage_path = _decrypt_auth(str(_auth_enc_file))
+        if _auth_storage_path:
+            # Inyectar storage_state en new_context()
+            import re as _re_auth
+            def _inject_storage(m):
+                call = m.group(0).rstrip()
+                if "storage_state" in call:
+                    return call
+                if call.endswith(")"):
+                    return call[:-1] + f', storage_state="{_auth_storage_path}")'
+                return call
+            source = _re_auth.sub(r'\.new_context\([^)]*\)', _inject_storage, source)
 
     # Check for outline data (data-driven testing)
     outline_json_path = base / (name + ".outline.json")
