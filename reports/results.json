@@ -2,7 +2,7 @@
   {
     "script": "Ejemplo_Salesforce.py",
     "status": "FAIL",
-    "duration": 92.2,
+    "duration": 92.1,
     "error": "playwright._impl._errors.TimeoutError: Locator.click: Timeout 90000ms exceeded.",
     "steps": [
       {
@@ -81,7 +81,7 @@
   {
     "script": "Validacion_formulario_completo.py",
     "status": "PASS",
-    "duration": 3.8,
+    "duration": 3.7,
     "error": "",
     "steps": [
       {
@@ -167,7 +167,7 @@
   {
     "script": "Validacion_formulario_b\u00e1sico.py",
     "status": "PASS",
-    "duration": 2.9,
+    "duration": 3.1,
     "error": "",
     "steps": [
       {
