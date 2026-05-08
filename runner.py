@@ -169,7 +169,15 @@ def _decrypt_auth(enc_path):
         out_path = enc_path.replace(".auth.enc", ".auth.json")
         with open(out_path, "wb") as f:
             f.write(bytes(decrypted))
-        print(f"[AUTH] Sesion descifrada: {out_path}")
+        # Validar que el JSON descifrado es válido
+        try:
+            import json as _j
+            with open(out_path, "r", encoding="utf-8") as _vf:
+                _parsed = _j.load(_vf)
+            print(f"[AUTH] Sesion descifrada OK: {out_path} ({len(_parsed.get('cookies',[]))} cookies)")
+        except Exception as _ve:
+            print(f"[AUTH] ⚠️ JSON descifrado INVÁLIDO: {_ve}")
+            return None
         return out_path
     except Exception as e:
         print(f"[AUTH] Error descifrando {enc_path}: {e}")
