@@ -169,7 +169,15 @@ def _build_instrumented_script(original_path: str, screenshots_dir: str,
     instrumented.append(f"_ss_dir = {ss_dir_repr}\n")
     instrumented.append(f"_sj_path = {sj_repr}\n")
     instrumented.append(f"_os.makedirs(_ss_dir, exist_ok=True)\n")
-    instrumented.append(f"_ss_map = {{}}\n\n")
+    instrumented.append(f"_ss_map = {{}}\n")
+    # Registrar atexit para guardar screenshots incluso si el script falla
+    instrumented.append(f"import atexit as _atexit\n")
+    instrumented.append(f"def _save_ss_map():\n")
+    instrumented.append(f"    try:\n")
+    instrumented.append(f"        with open(_sj_path, 'w', encoding='utf-8') as _f:\n")
+    instrumented.append(f"            _json.dump({{'screenshots': _ss_map}}, _f)\n")
+    instrumented.append(f"    except Exception: pass\n")
+    instrumented.append(f"_atexit.register(_save_ss_map)\n\n")
 
     for line in original_lines:
         # Reemplazar launch() completo con nuestros kwargs
